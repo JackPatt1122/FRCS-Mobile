@@ -52,9 +52,6 @@ class UserDao {
   }
   
 
-    tokenString() async {
-    final val = await getToken(0);
-    }
 
   Future getUser(int id) async {
     final db = await dbProvider.database;
@@ -64,11 +61,7 @@ class UserDao {
       return Future.value(users[0]['username']);
     
   }
-  
 
-    userString() async {
-    final val = await getUser(0);
-    }
 
 }
 

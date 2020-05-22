@@ -163,7 +163,7 @@ class ListDetail extends StatelessWidget {
         snapSpec: const SnapSpec(
           snap: true,
           // Set custom snapping points.
-          snappings: [0.1, 0.5, 1.0],
+          snappings: [0.05, 0.4, 1.0],
           positioning: SnapPositioning.relativeToAvailableSpace,
         ),
         body: Container(
@@ -175,14 +175,6 @@ class ListDetail extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
               onPressed: () {  Navigator.pop(context);},
             ),),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                  child: Text("Pit Data for Team " + text,
-                      style:
-                          TextStyle(fontSize: 20, fontFamily: 'Poppins-Bold')),
-                )),
             Padding(
               padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
               child: FutureBuilder<dynamic>(
@@ -191,7 +183,7 @@ class ListDetail extends StatelessWidget {
                   if (snapshot.hasData)
                     return Text('${snapshot.data['nickname']}',
                         style: TextStyle(
-                            fontFamily: 'Poppins-Medium', fontSize: 13));
+                            fontFamily: 'Poppins-Bold', fontSize: 20));
                   return const CircularProgressIndicator();
                 },
               ),

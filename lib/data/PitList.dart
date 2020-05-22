@@ -18,6 +18,8 @@ class HomePageState extends State {
   List data;
   String selectedItem;
 
+  TextEditingController controller = new TextEditingController();
+
   Future getData() async {
     var response = await http
         .get(Uri.encodeFull("http://192.168.86.37:8000/api/pit"), headers: {
@@ -45,6 +47,12 @@ class HomePageState extends State {
         backgroundColor: Color.fromRGBO(241, 244, 251, 1),
         body: new Stack(
           children: <Widget>[
+            new TextField(
+  decoration: new InputDecoration(
+    labelText: "Search something"
+  ),
+  controller: controller,
+),
             ListView.builder(
               itemCount: data == null ? 0 : data.length,
               itemBuilder: (BuildContext context, int index) {

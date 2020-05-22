@@ -1,85 +1,110 @@
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:bloc_login/bloc/authentication_bloc.dart';
 import 'package:bloc_login/dao/user_dao.dart';
 
   
   Future getUserData() async {
-    var token = await UserDao().tokenString();
+    var token = await UserDao().getToken(0);
 
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/users/" + '993926b321141ee095220489d811b381b3df63b6'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/users/" + token),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
 
 
     return Future.value(json.decode(response.body)['username']);
   }
 
-  Future getImageData() async {
+  getProfileData() async {
+    var token = await UserDao().getToken(0);
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + '1'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/users/" + token),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
+        });
+
+
+    return Future.value(json.decode(response.body)['pk']);
+  }
+
+
+
+  Future getImageData() async {
+    var token = await UserDao().getToken(0);
+    var profile = await getProfileData();
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
         });
     return Future.value(json.decode(response.body)['image']);
   }
 
   Future getFirstName() async {
+    var token = await UserDao().getToken(0);
+    var profile = await getProfileData();
+
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + '1'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
     return Future.value(json.decode(response.body)['first_name']);
   }
 
   Future getLastName() async {
+    var token = await UserDao().getToken(0);
+    var profile = await getProfileData();
+
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + '1'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
     return Future.value(json.decode(response.body)['last_name']);
   }
 
   Future getMatchEntries() async {
+    var token = await UserDao().getToken(0);
     var user = await getUserData();
 
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + '12'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
     return Future.value(json.decode(response.body)['match_count']);
   }
 
   Future getPitEntries() async {
+    var token = await UserDao().getToken(0);
     var user = await getUserData();
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + '12'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
     return Future.value(json.decode(response.body)['pit_count']);
   }
 
   Future getTeamRole() async {
+    var token = await UserDao().getToken(0);
     var user = await getUserData();
 
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + '12'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
 
     if (json.decode(response.body)['is_admin'] == true) {
@@ -90,18 +115,20 @@ import 'package:bloc_login/dao/user_dao.dart';
   }
 
     Future getTeamNum() async {
+      var token = await UserDao().getToken(0);
     var user = await getUserData();
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + '12'),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
 
     return Future.value(json.decode(response.body)['team_num']);
   }
 
       Future getTeamName() async {
+        var token = await UserDao().getToken(0);
     var response = await http.get(
         Uri.encodeFull("https://www.thebluealliance.com/api/v3/team/frc" + "810"),
         headers: {
@@ -113,11 +140,12 @@ import 'package:bloc_login/dao/user_dao.dart';
   }
 
     Future getTeamUsers() async {
+      var token = await UserDao().getToken(0);
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/users/"),
         headers: {
           "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+          'Authorization': 'Token:' + token
         });
 
     return Future.value(json.decode(response.body));

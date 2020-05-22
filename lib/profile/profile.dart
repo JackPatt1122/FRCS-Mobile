@@ -1,12 +1,7 @@
 import 'package:bloc_login/database/user_database.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
 import 'package:bloc_login/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bloc_login/dao/user_dao.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
 import 'package:bloc_login/Constants.dart';
 import 'team_users.dart';
@@ -31,6 +26,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     getMatchEntries();
     getTeamNum();
     getTeamName();
+    getProfileData();
 
     DatabaseProvider.dbProvider.getToken();
 
@@ -101,7 +97,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     if (snapshot.hasData)
                       return Image.network(
                         '${snapshot.data}',
-                        scale: 0.7,
+                        height: 80,
+                        width: 80,
+                        fit: BoxFit.fitWidth,
                       );
                     return const CircularProgressIndicator();
                   },
@@ -115,11 +113,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       future: getFirstName(),
                       builder: (context, AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.hasData)
+                        if(snapshot.data != ""){
                           return Text(
                             '${snapshot.data}',
                             style: TextStyle(
                                 fontFamily: 'Poppins-Bold', fontSize: 15),
                           );
+                        }
+                        else{
+                          return Text("Username");
+                        }
                         return const CircularProgressIndicator();
                       },
                     ),

@@ -43,10 +43,7 @@ class UserRepository {
     return result;
   }
 
-  returnToken() async {
-    String result = await userDao.getToken(0);
-    return result;
-  }
+
 
 
 }
