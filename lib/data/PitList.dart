@@ -8,7 +8,6 @@ import 'pit_model.dart';
 
 import 'package:gradient_widgets/gradient_widgets.dart';
 
-
 class PitList extends StatefulWidget {
   @override
   HomePageState createState() => new HomePageState();
@@ -48,11 +47,9 @@ class HomePageState extends State {
         body: new Stack(
           children: <Widget>[
             new TextField(
-  decoration: new InputDecoration(
-    labelText: "Search something"
-  ),
-  controller: controller,
-),
+              decoration: new InputDecoration(labelText: "Search something"),
+              controller: controller,
+            ),
             ListView.builder(
               itemCount: data == null ? 0 : data.length,
               itemBuilder: (BuildContext context, int index) {
@@ -61,7 +58,6 @@ class HomePageState extends State {
                   title: Text(
                     data[index]['team_num'].toString(),
                     style: TextStyle(fontFamily: 'Poppins-Bold', fontSize: 20),
-                    
                   ),
                   onTap: () {
                     setState(() {
@@ -77,21 +73,18 @@ class HomePageState extends State {
                   },
                 );
               },
-              
             ),
             Positioned(
               bottom: 20,
               right: 20,
               child: CircularGradientButton(
-              
-              child: Icon(Icons.create),
-              callback: () {},
-              gradient: Gradients.hotLinear,
-              shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.5),
-            ),)
-            
+                child: Icon(Icons.create),
+                callback: () {},
+                gradient: Gradients.hotLinear,
+                shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.5),
+              ),
+            )
           ],
         ));
-
   }
 }

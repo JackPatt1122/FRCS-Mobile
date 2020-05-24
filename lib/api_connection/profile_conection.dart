@@ -18,8 +18,9 @@ import 'package:bloc_login/dao/user_dao.dart';
     return Future.value(json.decode(response.body)['username']);
   }
 
-  getProfileData() async {
+   Future getTeamData() async {
     var token = await UserDao().getToken(0);
+
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/users/" + token),
         headers: {
@@ -28,47 +29,61 @@ import 'package:bloc_login/dao/user_dao.dart';
         });
 
 
-    return Future.value(json.decode(response.body)['pk']);
+    return Future.value(json.decode(response.body)['username']);
+  }
+
+  getProfileData() async {
+    var token = await UserDao().getToken(0);
+    var user = await getUserData();
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+
+    return Future.value(json.decode(response.body)['profile']);
   }
 
 
 
   Future getImageData() async {
     var token = await UserDao().getToken(0);
-    var profile = await getProfileData();
+    var profile = await getUserData();
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + profile),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token:' + token
         });
-    return Future.value(json.decode(response.body)['image']);
+    return Future.value(json.decode(response.body)['profile']['image']);
   }
 
   Future getFirstName() async {
     var token = await UserDao().getToken(0);
-    var profile = await getProfileData();
+    var profile = await getUserData();
 
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + profile),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token:' + token
         });
-    return Future.value(json.decode(response.body)['first_name']);
+    return Future.value(json.decode(response.body)['profile']['first_name']);
   }
 
   Future getLastName() async {
     var token = await UserDao().getToken(0);
-    var profile = await getProfileData();
+    var profile = await getUserData();
 
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/profile/" + profile.toString()),
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + profile),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token:' + token
         });
-    return Future.value(json.decode(response.body)['last_name']);
+    return Future.value(json.decode(response.body)['profile']['last_name']);
   }
 
   Future getMatchEntries() async {

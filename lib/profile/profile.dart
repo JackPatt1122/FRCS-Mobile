@@ -26,7 +26,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     getMatchEntries();
     getTeamNum();
     getTeamName();
-    getProfileData();
 
     DatabaseProvider.dbProvider.getToken();
 
@@ -235,7 +234,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     }else if(choice == Constants.stats){
       print('Subscribe');
     }else if(choice == Constants.members){
-      print('SignOut');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TeamUsers()));
     
     }else if(choice == Constants.SignOut){
       BlocProvider.of<AuthenticationBloc>(context)
