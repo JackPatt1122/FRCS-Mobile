@@ -46,10 +46,8 @@ class HomePageState extends State {
         backgroundColor: Color.fromRGBO(241, 244, 251, 1),
         body: new Stack(
           children: <Widget>[
-            new TextField(
-              decoration: new InputDecoration(labelText: "Search something"),
-              controller: controller,
-            ),
+           
+            
             ListView.builder(
               itemCount: data == null ? 0 : data.length,
               itemBuilder: (BuildContext context, int index) {

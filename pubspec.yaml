@@ -32,6 +32,7 @@ dependencies:
   sliding_sheet: ^0.3.5
   gradient_widgets: ^0.5.1
   google_nav_bar: ^2.2.0
+  flutter_svg: ^0.17.4
 
 
   
@@ -69,13 +70,18 @@ flutter:
     - family: Poppins-Bold
       fonts:
         - asset: assets/Poppins-Bold.ttf
+        
+    - family: Poppins-SemiBold
+      fonts:
+        - asset: assets/Poppins-SemiBold.ttf
 
     - family: Poppins-Medium
       fonts:
         - asset: assets/Poppins-Medium.ttf    
     - family: Poppins-Light
       fonts:
-        - asset: assets/Poppins-Light.ttf    
+        - asset: assets/Poppins-Light.ttf 
+
     
 
   # To add assets to your application, add an assets section, like this:

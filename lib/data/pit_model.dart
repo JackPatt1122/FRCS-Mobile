@@ -152,9 +152,13 @@ class ListDetail extends StatelessWidget {
     return Future.value(json.decode(response.body));
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
+      
       backgroundColor: Colors.grey.shade200,
       body: SlidingSheet(
         closeOnBackdropTap: true,
