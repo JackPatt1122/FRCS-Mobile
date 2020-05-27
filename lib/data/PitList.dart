@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:bloc_login/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,6 +9,7 @@ import 'pit_model.dart';
 
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
+
 class PitList extends StatefulWidget {
   @override
   HomePageState createState() => new HomePageState();
@@ -43,60 +45,95 @@ class HomePageState extends State {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      
         backgroundColor: Color.fromRGBO(241, 244, 251, 1),
         body: new Stack(
           children: <Widget>[
-            Padding(padding: EdgeInsets.fromLTRB(12, 20, 0, 0),
-            child: Text("Pit Entries"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
+                  child: Text("Pit Entries",
+                      style:
+                          TextStyle(fontSize: 25, fontFamily: 'Poppins-Bold')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
+                  child: IconButton(
+                    
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      );
+                    },
+                    icon: FutureBuilder<dynamic>(
+                      future: getImageData(),
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData)
+                          return Image.network(
+                            '${snapshot.data}',
+                            height: 45,
+                            width: 45,
+                          );
+                        return Text("Loading");
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-            ListView.builder(
-              itemCount: data == null ? 0 : data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Card(
-                    child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        selected: data[index] == selectedItem,
-                        title: Text(
-                          data[index]['team_num'].toString(),
-                          style: TextStyle(
-                              fontFamily: 'Poppins-Bold', fontSize: 20),
-                        ),
-                        subtitle: FutureBuilder<dynamic>(
-                                      future: getTeamNameList(data[index]['team_num'].toString()),
-                                      builder: (context,
-                                          AsyncSnapshot<dynamic> snapshot) {
-                                        if (snapshot.hasData)
-                                          return Text(
-                                            ' ${snapshot.data}',
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins-Medium',
-                                                fontSize: 15),
-                                          );
-                                        return Text("Loading");
-                                      },
-                                    ),
-                        onTap: () {
-                          setState(() {
-                            selectedItem = data[index]['team_num'].toString();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ListDetail(
-                                    text: selectedItem,
-                                  ),
-                                ));
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                  ),
-                  
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: ListView.builder(
+                itemCount: data == null ? 0 : data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            selected: data[index] == selectedItem,
+                            title: Text(
+                              data[index]['team_num'].toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 20),
+                            ),
+                            subtitle: FutureBuilder<dynamic>(
+                              future: getTeamNameList(
+                                  data[index]['team_num'].toString()),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text(
+                                    ' ${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 15),
+                                  );
+                                return Text("Loading");
+                              },
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedItem =
+                                    data[index]['team_num'].toString();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ListDetail(
+                                        text: selectedItem,
+                                      ),
+                                    ));
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
             Positioned(
               bottom: 20,

@@ -7,6 +7,7 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 
 class ListDetail extends StatelessWidget {
   final String text;
+  
 
   ListDetail({Key key, @required this.text}) : super(key: key);
 
@@ -188,9 +189,15 @@ class ListDetail extends StatelessWidget {
                     return Text('${snapshot.data['nickname']}',
                         style: TextStyle(
                             fontFamily: 'Poppins-Bold', fontSize: 20));
-                  return const CircularProgressIndicator();
+                  return Text("Loading");
                 },
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+              child: Text(
+                text, style: TextStyle(fontSize: 18),
+              )
             ),
             SingleChildScrollView(
                 child: Column(
@@ -216,7 +223,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -241,7 +248,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -267,7 +274,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -292,7 +299,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -318,7 +325,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -343,7 +350,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -368,7 +375,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -393,7 +400,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -418,7 +425,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -443,7 +450,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -468,7 +475,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -493,7 +500,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -518,7 +525,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -543,7 +550,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -597,7 +604,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -622,7 +629,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -647,7 +654,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -672,7 +679,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -697,7 +704,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -722,7 +729,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),
@@ -747,7 +754,7 @@ class ListDetail extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins-Medium',
                                     fontSize: 13));
-                          return const CircularProgressIndicator();
+                          return Text("Loading");
                         },
                       ),
                     )),

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
 
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:bloc_login/Constants.dart';
+import 'package:bloc_login/bloc/authentication_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -40,56 +43,55 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   getUserRole() async {
     var role = await getTeamRole();
-    if(role == "Mentor"){
+    if (role == "Mentor") {
       return "Mentor";
-    }
-    else{
+    } else {
       return "Member";
     }
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     void showAsBottomSheet() async {
-  final result = await showSlidingBottomSheet(
-    context,
-    builder: (context) {
-      return SlidingSheetDialog(
-        elevation: 8,
-        cornerRadius: 16,
-        snapSpec: const SnapSpec(
-          snap: true,
-          snappings: [0.4, 0.7, 1.0],
-          positioning: SnapPositioning.relativeToAvailableSpace,
-        ),
-        builder: (context, state) {
-          return Container(
-            height: 400,
-            child: Center(
-              child: Material(
-                child: InkWell(
-                  onTap: () => Navigator.pop(context, 'This is the result.'),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'This is the content of the sheet',
-                      style: Theme.of(context).textTheme.body1,
-                    ),
+      final result = await showSlidingBottomSheet(context, builder: (context) {
+        return SlidingSheetDialog(
+          elevation: 8,
+          duration: Duration(milliseconds: 300),
+          cornerRadius: 16,
+          snapSpec: const SnapSpec(
+            snap: true,
+            snappings: [1.0, 1.0],
+            positioning: SnapPositioning.relativeToAvailableSpace,
+          ),
+          builder: (context, state) {
+            return Container(
+              height: 460,
+              child: Center(
+                child: Material(
+                  child: InkWell(
+                    onTap: () => Navigator.pop(context, 'This is the result.'),
+                    child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Text("TEST"),
+                              ],
+                            )
+                          ],
+                        )),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-      );
-    }
-  );
+            );
+          },
+        );
+      });
 
-  print(result); // This is the result.
-}
+      print(result); // This is the result.
+    }
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: Container(
@@ -114,7 +116,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ],
                       ),
                       child: Center(
-                        child: Icon(Icons.arrow_back),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
                       ),
                     )),
                 Padding(
@@ -133,7 +140,18 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ],
                       ),
                       child: Center(
-                        child: Icon(Icons.menu),
+                        child: PopupMenuButton<String>(
+                          icon: Icon(Icons.menu),
+                          onSelected: choiceAction,
+                          itemBuilder: (BuildContext context) {
+                            return Constants.choices.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
+                          },
+                        ),
                       ),
                     )),
               ],
@@ -159,17 +177,18 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   Padding(
                     padding: EdgeInsets.only(top: 100 / 2.0),
                     child: Container(
-                      decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                      color: const Color.fromRGBO(0, 0, 0, .18),
-                      offset: Offset(0, 30),
-                      blurRadius: 90)
-                      
-                ],
-                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                color: Color.fromRGBO(241, 243, 246, 1),),
-                      
-
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, .18),
+                              offset: Offset(0, 30),
+                              blurRadius: 90)
+                        ],
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30)),
+                        color: Color.fromRGBO(241, 243, 246, 1),
+                      ),
                       height: double.infinity,
                     ),
                   ),
@@ -272,40 +291,37 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                             },
                           ),
                         ),
-                        
                       ],
                     ),
                   ),
                   Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 20),
-                            child: Container(
-                              height: 40,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                  gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(138, 35, 135, 1),
-                                    Color.fromRGBO(233, 64, 87, 1),
-                                    Color.fromRGBO(242, 113, 33, 1)
-                                  ])),
-                              child: GestureDetector(
-                                child: Center(
-                                  child: Text(
-                                    "View Entry Data",
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Bold',
-                                        fontSize: 15,
-                                        color: Colors.white),
-                                  ),
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Container(
+                            height: 40,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                gradient: LinearGradient(colors: [
+                                  Color.fromRGBO(138, 35, 135, 1),
+                                  Color.fromRGBO(233, 64, 87, 1),
+                                  Color.fromRGBO(242, 113, 33, 1)
+                                ])),
+                            child: GestureDetector(
+                              child: Center(
+                                child: Text(
+                                  "View Entry Data",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Bold',
+                                      fontSize: 15,
+                                      color: Colors.white),
                                 ),
-                                onTap: () => showAsBottomSheet(),
-                              )),
-                        )
-                  ),
+                              ),
+                              onTap: () => showAsBottomSheet(),
+                            )),
+                      )),
                 ],
               ),
             )
@@ -314,5 +330,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       ),
     );
   }
-}
 
+  void choiceAction(String choice) {
+    if (choice == Constants.Settings) {
+      print('Settings');
+    } else if (choice == Constants.stats) {
+      print('Subscribe');
+    } else if (choice == Constants.members) {
+      print('SignOut');
+    } else if (choice == Constants.SignOut) {
+      BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+    }
+  }
+}
