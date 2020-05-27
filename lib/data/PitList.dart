@@ -19,6 +19,8 @@ class HomePageState extends State {
   List data;
   String selectedItem;
 
+  final myController = TextEditingController();
+
   TextEditingController controller = new TextEditingController();
 
   Future getData() async {
@@ -43,6 +45,14 @@ class HomePageState extends State {
   }
 
   @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Color.fromRGBO(241, 244, 251, 1),
@@ -52,15 +62,14 @@ class HomePageState extends State {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(12, 25, 0, 0),
                   child: Text("Pit Entries",
                       style:
                           TextStyle(fontSize: 25, fontFamily: 'Poppins-Bold')),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                   child: IconButton(
-                    
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -84,7 +93,59 @@ class HomePageState extends State {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 50),
+              padding: const EdgeInsets.only(top: 70, left: 5, right: 50),
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  color: Colors.white,
+                  border: Border.all(style: BorderStyle.none),
+                  boxShadow: [
+                    BoxShadow(
+                        color: const Color(0x29000000),
+                        offset: Offset(0, 0),
+                        blurRadius: 40)
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 7, right: 7),
+                  child: TextFormField(
+                    controller: myController,
+                    decoration: InputDecoration(
+                        labelText: 'Team Number',
+                        border: InputBorder.none,
+                        labelStyle:
+                            TextStyle(color: Color.fromRGBO(193, 193, 193, 1))),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 70, 5, 0),
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        color: Color.fromRGBO(237, 84, 65, 1)),
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      onTap: () { setState(() {
+                        var teamNum = myController.text;
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ListDetail(text: teamNum)));
+                      });
+                      },
+                    )),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 90),
               child: ListView.builder(
                 itemCount: data == null ? 0 : data.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -136,14 +197,27 @@ class HomePageState extends State {
               ),
             ),
             Positioned(
-              bottom: 20,
-              right: 20,
-              child: CircularGradientButton(
-                child: Icon(Icons.create),
-                callback: () {},
-                gradient: Gradients.hotLinear,
-                shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.5),
-              ),
+              bottom: 5,
+              right: 5,
+              child: GestureDetector(onTap: () => print("New Entry"), child: Container(
+                  width: 110,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    gradient: LinearGradient(begin: Alignment(-1.0, -0.5), end: Alignment(1.5, 0.5), colors: [
+                      Color.fromRGBO(242, 113, 33, 1),
+                      Color.fromRGBO(233, 64, 87, 1),
+                      
+                      Color.fromRGBO(138, 35, 135, 1),
+                    ]),
+                  ),
+                  child: Center(
+                    child: Text("New Entry",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'Poppins-Bold',
+                            color: Colors.white)),
+                  )),) 
             )
           ],
         ));
