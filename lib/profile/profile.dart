@@ -1,10 +1,8 @@
 import 'package:bloc_login/database/user_database.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc_login/bloc/authentication_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
-import 'package:bloc_login/Constants.dart';
-import 'team_users.dart';
+
+import 'package:sliding_sheet/sliding_sheet.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -29,10 +27,71 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     DatabaseProvider.dbProvider.getToken();
   }
 
+  getNameCreds() async {
+    var f_name = await getFirstName();
+    var l_name = await getLastName();
+    var username = await getUserData();
+    if (f_name == " ") {
+      return username;
+    } else {
+      return f_name + " " + l_name;
+    }
+  }
+
+  getUserRole() async {
+    var role = await getTeamRole();
+    if(role == "Mentor"){
+      return "Mentor";
+    }
+    else{
+      return "Member";
+    }
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+    void showAsBottomSheet() async {
+  final result = await showSlidingBottomSheet(
+    context,
+    builder: (context) {
+      return SlidingSheetDialog(
+        elevation: 8,
+        cornerRadius: 16,
+        snapSpec: const SnapSpec(
+          snap: true,
+          snappings: [0.4, 0.7, 1.0],
+          positioning: SnapPositioning.relativeToAvailableSpace,
+        ),
+        builder: (context, state) {
+          return Container(
+            height: 400,
+            child: Center(
+              child: Material(
+                child: InkWell(
+                  onTap: () => Navigator.pop(context, 'This is the result.'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'This is the content of the sheet',
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  );
+
+  print(result); // This is the result.
+}
     return Scaffold(
-      backgroundColor: Color.fromRGBO(241, 244, 251, 1),
+      backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -79,105 +138,181 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     )),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: FutureBuilder<dynamic>(
-                    future: getFirstName(),
-                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.hasData) if (snapshot.data != "") {
-                        return Text(
-                          '${snapshot.data}',
-                          style: TextStyle(
-                              fontFamily: 'Poppins-Bold', fontSize: 25),
-                        );
-                      } else {
-                        return Text("Input Your Name In Profile Settings");
-                      }
-                      return const CircularProgressIndicator();
-                    },
-                  ),
-                ),
-                Center(
-                  child: FutureBuilder<dynamic>(
-                    future: getLastName(),
-                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.hasData)
-                        return Text(
-                          ' ${snapshot.data}',
-                          style: TextStyle(
-                              fontFamily: 'Poppins-Bold', fontSize: 25),
-                        );
-                      return const CircularProgressIndicator();
-                    },
-                  ),
-                ),
-              ],
+            FutureBuilder<dynamic>(
+              future: getNameCreds(),
+              builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData)
+                  return Text(
+                    ' ${snapshot.data}',
+                    style: TextStyle(
+                        fontFamily: 'Poppins-SemiBold',
+                        fontSize: 25,
+                        color: Color.fromRGBO(102, 102, 102, 1)),
+                  );
+                return Text("Loading");
+              },
             ),
             Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 100 / 2.0),
                     child: Container(
-                      height: 350,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0))),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            
-                            children: <Widget>[
-                              Text("Team", style: TextStyle(
-                                fontFamily: 'Poppins-SemiBold',
-                                          fontSize: 25
-                              ),),
-                              FutureBuilder<dynamic>(
-                                future: getTeamNum(),
-                                builder:
-                                    (context, AsyncSnapshot<dynamic> snapshot) {
-                                  if (snapshot.hasData)
-                                    return Text(
-                                      ' ${snapshot.data}',
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins-SemiBold',
-                                          fontSize: 25),
-                                    );
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: FutureBuilder<dynamic>(
-                                future: getTeamName(),
-                                builder:
-                                    (context, AsyncSnapshot<dynamic> snapshot) {
-                                  if (snapshot.hasData)
-                                    return Text(
-                                      ' ${snapshot.data}',
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins-Medium',
-                                          fontSize: 15),
-                                    );
-                                  return null;
-                                },
-                              ),
-                          )
-                        ],
+                      decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      color: const Color.fromRGBO(0, 0, 0, .18),
+                      offset: Offset(0, 30),
+                      blurRadius: 90)
+                      
+                ],
+                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                color: Color.fromRGBO(241, 243, 246, 1),),
+                      
+
+                      height: double.infinity,
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: ShapeDecoration(
+                      shape: BeveledRectangleBorder(),
+                      color: Colors.transparent,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(0),
+                      child: FutureBuilder<dynamic>(
+                        future: getImageData(),
+                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.hasData)
+                            return Image.network(
+                              '${snapshot.data}',
+                              height: 100,
+                              width: 100,
+                            );
+                          return Text("Loading");
+                        },
                       ),
-                    )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Team",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-SemiBold',
+                                  fontSize: 30,
+                                  color: Color.fromRGBO(102, 102, 102, 1)),
+                            ),
+                            FutureBuilder<dynamic>(
+                              future: getTeamNum(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text(
+                                    ' ${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 30,
+                                        color:
+                                            Color.fromRGBO(102, 102, 102, 1)),
+                                  );
+                                return Text("Loading");
+                              },
+                            ),
+                          ],
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: FutureBuilder<dynamic>(
+                            future: getTeamName(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                  ' ${snapshot.data}',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Medium',
+                                      fontSize: 15,
+                                      color: Color.fromRGBO(102, 102, 102, 1)),
+                                );
+                              return Text("Loading");
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 110,
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(239, 96, 51, 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          alignment: Alignment.center,
+                          child: FutureBuilder<dynamic>(
+                            future: getUserRole(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                  ' ${snapshot.data}',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Medium',
+                                      fontSize: 20,
+                                      color: Colors.white),
+                                );
+                              return Text("Loading");
+                            },
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                  Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20),
+                            child: Container(
+                              height: 40,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  gradient: LinearGradient(colors: [
+                                    Color.fromRGBO(138, 35, 135, 1),
+                                    Color.fromRGBO(233, 64, 87, 1),
+                                    Color.fromRGBO(242, 113, 33, 1)
+                                  ])),
+                              child: GestureDetector(
+                                child: Center(
+                                  child: Text(
+                                    "View Entry Data",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                                onTap: () => showAsBottomSheet(),
+                              )),
+                        )
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 }
+

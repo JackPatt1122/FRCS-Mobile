@@ -165,3 +165,14 @@ import 'package:bloc_login/dao/user_dao.dart';
 
     return Future.value(json.decode(response.body));
   }
+
+       Future getTeamNameList(data) async {
+    var response = await http.get(
+        Uri.encodeFull("https://www.thebluealliance.com/api/v3/team/frc" + data),
+        headers: {
+          "Accept": "application/json",
+          "X-TBA-Auth-Key": "PzOW8s1DYGlVkgAsikwVlhy5wZ5Tm85fKSjd0DfiUJFQOGhsReyZEf88EEoAU1Cw"
+        });
+
+    return Future.value(json.decode(response.body)['nickname']);
+  }

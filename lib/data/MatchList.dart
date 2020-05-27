@@ -37,8 +37,6 @@ class HomePageState extends State {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Color.fromRGBO(241, 244, 251, 1),
-      appBar: new AppBar(
-          title: new Text("Listviews"), backgroundColor: Colors.blue),
       body: new ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index) {
@@ -46,7 +44,7 @@ class HomePageState extends State {
               child: Padding(
             padding: EdgeInsets.all(10),
             child: new Text(
-              data[index]['team_num'].toString(),
+              "Team " + data[index]['team_num'].toString() + " | Match " + data[index]['match_number'].toString(),
               style: TextStyle(fontFamily: 'Poppins-Bold', fontSize: 20),
             ),
           ));
@@ -54,4 +52,4 @@ class HomePageState extends State {
       ),
     );
   }
-}
+} 

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'pit_model.dart';
 
 import 'package:gradient_widgets/gradient_widgets.dart';
-
+import 'package:bloc_login/api_connection/profile_conection.dart';
 class PitList extends StatefulWidget {
   @override
   HomePageState createState() => new HomePageState();
@@ -43,32 +43,58 @@ class HomePageState extends State {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      
         backgroundColor: Color.fromRGBO(241, 244, 251, 1),
         body: new Stack(
           children: <Widget>[
-           
-            
+            Padding(padding: EdgeInsets.fromLTRB(12, 20, 0, 0),
+            child: Text("Pit Entries"),
+            ),
             ListView.builder(
               itemCount: data == null ? 0 : data.length,
               itemBuilder: (BuildContext context, int index) {
-                return new ListTile(
-                  selected: data[index] == selectedItem,
-                  title: Text(
-                    data[index]['team_num'].toString(),
-                    style: TextStyle(fontFamily: 'Poppins-Bold', fontSize: 20),
+                return Container(
+                  child: Card(
+                    child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        selected: data[index] == selectedItem,
+                        title: Text(
+                          data[index]['team_num'].toString(),
+                          style: TextStyle(
+                              fontFamily: 'Poppins-Bold', fontSize: 20),
+                        ),
+                        subtitle: FutureBuilder<dynamic>(
+                                      future: getTeamNameList(data[index]['team_num'].toString()),
+                                      builder: (context,
+                                          AsyncSnapshot<dynamic> snapshot) {
+                                        if (snapshot.hasData)
+                                          return Text(
+                                            ' ${snapshot.data}',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins-Medium',
+                                                fontSize: 15),
+                                          );
+                                        return Text("Loading");
+                                      },
+                                    ),
+                        onTap: () {
+                          setState(() {
+                            selectedItem = data[index]['team_num'].toString();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ListDetail(
+                                    text: selectedItem,
+                                  ),
+                                ));
+                          });
+                        },
+                      )
+                    ],
                   ),
-                  onTap: () {
-                    setState(() {
-                      selectedItem = data[index]['team_num'].toString();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ListDetail(
-                              text: selectedItem,
-                            ),
-                          ));
-                    });
-                  },
+                  ),
+                  
                 );
               },
             ),
