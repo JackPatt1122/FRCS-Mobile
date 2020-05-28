@@ -31,13 +31,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   }
 
   getNameCreds() async {
-    var f_name = await getFirstName();
-    var l_name = await getLastName();
+    var fName = await getFirstName();
+    var lName = await getLastName();
     var username = await getUserData();
-    if (f_name == " ") {
+    if (fName == " ") {
       return username;
     } else {
-      return f_name + " " + l_name;
+      return fName + " " + lName;
     }
   }
 
@@ -50,8 +50,20 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     }
   }
 
+  changeRoleColor() async {
+    var role = await getTeamRole();
+    if (role == "Mentor") {
+      return Color.fromRGBO(233, 64, 87, 1);
+    } else {
+      return Color.fromRGBO(64, 149, 233, 1);
+    }
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
+    var roleColor = changeRoleColor();
     void showAsBottomSheet() async {
       final result = await showSlidingBottomSheet(context, builder: (context) {
         return SlidingSheetDialog(
@@ -271,7 +283,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         Container(
                           width: 110,
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(239, 96, 51, 1),
+                              color: roleColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0))),
                           alignment: Alignment.center,
@@ -304,11 +316,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
-                                gradient: LinearGradient(colors: [
-                                  Color.fromRGBO(138, 35, 135, 1),
-                                  Color.fromRGBO(233, 64, 87, 1),
-                                  Color.fromRGBO(242, 113, 33, 1)
-                                ])),
+                                    color: Color.fromRGBO(233, 64, 87, 1),
+                            ),
+                                  
+
+                              
                             child: GestureDetector(
                               child: Center(
                                 child: Text(
