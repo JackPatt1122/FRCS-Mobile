@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     getMatchEntries();
     getTeamNum();
     getTeamName();
+    changeRoleColor();
 
     DatabaseProvider.dbProvider.getToken();
   }
@@ -58,8 +59,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       return Color.fromRGBO(64, 149, 233, 1);
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +112,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
+                  child: GestureDetector(
                     child: Container(
                       height: 30,
                       width: 30,
@@ -128,14 +128,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ],
                       ),
                       child: Center(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                          ),
-                          onPressed: () => Navigator.pop(context),
+                        child: Center(
+                          child: Icon(Icons.arrow_back),
                         ),
                       ),
-                    )),
+                    ),
+                    onTap: () => Navigator.pop(context),
+                  ),
+                ),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
                     child: Container(
@@ -151,18 +151,20 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               blurRadius: 40)
                         ],
                       ),
-                      child: Center(
-                        child: PopupMenuButton<String>(
-                          icon: Icon(Icons.menu),
-                          onSelected: choiceAction,
-                          itemBuilder: (BuildContext context) {
-                            return Constants.choices.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(choice),
-                              );
-                            }).toList();
-                          },
+                      child: Container(
+                        child: Center(
+                          child: PopupMenuButton<String>(
+                            icon: Icon(Icons.menu),
+                            onSelected: choiceAction,
+                            itemBuilder: (BuildContext context) {
+                              return Constants.choices.map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(choice),
+                                );
+                              }).toList();
+                            },
+                          ),
                         ),
                       ),
                     )),
@@ -280,28 +282,37 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          width: 110,
-                          decoration: BoxDecoration(
-                              color: roleColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          alignment: Alignment.center,
-                          child: FutureBuilder<dynamic>(
-                            future: getUserRole(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text(
-                                  ' ${snapshot.data}',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Medium',
-                                      fontSize: 20,
-                                      color: Colors.white),
-                                );
-                              return Text("Loading");
-                            },
-                          ),
+                        FutureBuilder<dynamic>(
+                          future: changeRoleColor(),
+                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.hasData) {
+                              return Container(
+                                width: 110,
+                                decoration: BoxDecoration(
+                                    color: snapshot.data,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                alignment: Alignment.center,
+                                child: FutureBuilder<dynamic>(
+                                  future: getUserRole(),
+                                  builder: (context,
+                                      AsyncSnapshot<dynamic> snapshot) {
+                                    if (snapshot.hasData)
+                                      return Text(
+                                        ' ${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 20,
+                                            color: Colors.white),
+                                      );
+                                    return Text("Loading");
+                                  },
+                                ),
+                              );
+                            }
+
+                            return null;
+                          },
                         ),
                       ],
                     ),
@@ -314,13 +325,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                             height: 40,
                             width: 200,
                             decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                    color: Color.fromRGBO(233, 64, 87, 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Color.fromRGBO(233, 64, 87, 1),
                             ),
-                                  
-
-                              
                             child: GestureDetector(
                               child: Center(
                                 child: Text(

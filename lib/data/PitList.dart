@@ -51,7 +51,6 @@ class HomePageState extends State {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -136,10 +135,15 @@ class HomePageState extends State {
                         Icons.search,
                         color: Colors.white,
                       ),
-                      onTap: () { setState(() {
-                        var teamNum = myController.text;
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ListDetail(text: teamNum)));
-                      });
+                      onTap: () {
+                        setState(() {
+                          var teamNum = myController.text;
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ListDetail(text: teamNum)));
+                        });
                       },
                     )),
               ),
@@ -197,28 +201,32 @@ class HomePageState extends State {
               ),
             ),
             Positioned(
-              bottom: 5,
-              right: 5,
-              child: GestureDetector(onTap: () => print("New Entry"), child: Container(
-                  width: 110,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    gradient: LinearGradient(begin: Alignment(-1.0, -0.5), end: Alignment(1.5, 0.5), colors: [
-                      Color.fromRGBO(242, 113, 33, 1),
-                      Color.fromRGBO(233, 64, 87, 1),
-                      
-                      Color.fromRGBO(138, 35, 135, 1),
-                    ]),
-                  ),
-                  child: Center(
-                    child: Text("New Entry",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontFamily: 'Poppins-Bold',
-                            color: Colors.white)),
-                  )),) 
-            )
+                bottom: 5,
+                right: 5,
+                child: GestureDetector(
+                  onTap: () => print("New Entry"),
+                  child: Container(
+                      width: 110,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        gradient: LinearGradient(
+                            begin: Alignment(-1.0, -0.5),
+                            end: Alignment(1.5, 0.5),
+                            colors: [
+                              Color.fromRGBO(242, 113, 33, 1),
+                              Color.fromRGBO(233, 64, 87, 1),
+                              Color.fromRGBO(138, 35, 135, 1),
+                            ]),
+                      ),
+                      child: Center(
+                        child: Text("New Entry",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Poppins-Bold',
+                                color: Colors.white)),
+                      )),
+                ))
           ],
         ));
   }
