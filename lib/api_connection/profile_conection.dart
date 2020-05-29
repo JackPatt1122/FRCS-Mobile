@@ -108,6 +108,7 @@ import 'package:bloc_login/dao/user_dao.dart';
           "Accept": "application/json",
           'Authorization': 'Token:' + token
         });
+        print(json.decode(response.body)['pit_count']);
     return Future.value(json.decode(response.body)['pit_count']);
   }
 
@@ -143,7 +144,6 @@ import 'package:bloc_login/dao/user_dao.dart';
   }
 
       Future getTeamName() async {
-        var token = await UserDao().getToken(0);
     var response = await http.get(
         Uri.encodeFull("https://www.thebluealliance.com/api/v3/team/frc" + "810"),
         headers: {
@@ -176,3 +176,53 @@ import 'package:bloc_login/dao/user_dao.dart';
 
     return Future.value(json.decode(response.body)['nickname']);
   }
+
+    Future getTeamMatchEntries(data) async {
+      var token = await UserDao().getToken(0);
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/team/" + data.toString()),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+    return Future.value(json.decode(response.body)['match_count']);
+  }
+
+      Future getTeamPitEntries(data) async {
+      var token = await UserDao().getToken(0);
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/team/" + data.toString()),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+    return Future.value(json.decode(response.body)['pit_count']);
+  }
+
+      Future getGlobalMatchEntries(data) async {
+      var token = await UserDao().getToken(0);
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/team/" + data.toString()),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+    return Future.value(json.decode(response.body)['global_match_count']);
+  }
+
+
+      Future getTeamPitScouted(data) async {
+      var token = await UserDao().getToken(0);
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/team/" + data),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+    return Future.value(json.decode(response.body)['isPitScouted']);
+  }
+

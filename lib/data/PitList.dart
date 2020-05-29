@@ -66,29 +66,7 @@ class HomePageState extends State {
                       style:
                           TextStyle(fontSize: 25, fontFamily: 'Poppins-Bold')),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Profile()),
-                      );
-                    },
-                    icon: FutureBuilder<dynamic>(
-                      future: getImageData(),
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.hasData)
-                          return Image.network(
-                            '${snapshot.data}',
-                            height: 45,
-                            width: 45,
-                          );
-                        return Text("Loading");
-                      },
-                    ),
-                  ),
-                ),
+                
               ],
             ),
             Padding(

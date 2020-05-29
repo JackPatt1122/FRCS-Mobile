@@ -15,236 +15,238 @@ class ListDetail extends StatefulWidget {
 
 class ListDetailState extends State<ListDetail> {
   void showAsBottomSheet() async {
-      final result = await showSlidingBottomSheet(context, builder: (context) {
-        return SlidingSheetDialog(
-          elevation: 8,
-          duration: Duration(milliseconds: 300),
-          cornerRadius: 16,
-          snapSpec: const SnapSpec(
-            snap: true,
-            snappings: [1.0, 1.0],
-            positioning: SnapPositioning.relativeToAvailableSpace,
-          ),
-          builder: (context, state) {
-            return Container(
-            height: 500,
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Column(
-                  children: <Widget>[
-                    Align(
+    final result = await showSlidingBottomSheet(context, builder: (context) {
+      return SlidingSheetDialog(
+        elevation: 8,
+        duration: Duration(milliseconds: 300),
+        cornerRadius: 16,
+        snapSpec: const SnapSpec(
+          snap: true,
+          snappings: [0.8, 0.8],
+          positioning: SnapPositioning.relativeToAvailableSpace,
+        ),
+        builder: (context, state) {
+          return Material(
+            child: Container(
+              height: 700,
+              child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            height: 7,
+                            width: 35,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey),
+                          )),
+                      Align(
                         alignment: Alignment.topCenter,
-                        child: Container(
-                          height: 7,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.grey),
-                        )),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
-                          child: Text("Team Information")),
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("Country",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                            child: Text("Team Information")),
                       ),
-                    ),
-                    Align(
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data['nickname']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("Region",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("Country",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data['nickname']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data['state_prov']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("City",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("Region",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data['state_prov']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data['city']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("School",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("City",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data['city']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data['school_name']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("Rookie Year",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("School",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data['school_name']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data['rookie_year']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("Competitions",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("Rookie Year",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data['rookie_year']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 12),
-                          child: FutureBuilder<dynamic>(
-                            future: getCompData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text('${snapshot.data[0]['name']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
-                        child: Text("Home Champs",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15)),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("Competitions",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
                       ),
-                    ),
-                    Align(
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 12),
+                            child: FutureBuilder<dynamic>(
+                              future: getCompData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text('${snapshot.data[0]['name']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                      Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text(
-                                    '${snapshot.data['home_championship']['2020']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13));
-                              return Text("Loading");
-                            },
-                          ),
-                        )),
-                        
-                  ],
-                )),
+                          padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
+                          child: Text("Home Champs",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 15)),
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(12, 5, 12, 0),
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamData(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return Text(
+                                      '${snapshot.data['home_championship']['2020']}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Medium',
+                                          fontSize: 13));
+                                return Text("Loading");
+                              },
+                            ),
+                          )),
+                    ],
+                  )),
+            ),
           );
-          },
-        );
-      });
+        },
+      );
+    });
 
-      print(result); // This is the result.
-    }
+    print(result); // This is the result.
+  }
 
   double _width;
   Color _color;
   IconData _icon;
-  double _padding;
+
+
 
   Future getData() async {
     var response = await http.get(
@@ -369,8 +371,8 @@ class ListDetailState extends State<ListDetail> {
     _width = 30;
     _color = Colors.black;
     _icon = Icons.error;
-    _padding = 0;
   }
+
 
   Future getTeamData() async {
     var response = await http.get(
@@ -402,7 +404,24 @@ class ListDetailState extends State<ListDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+      body: SlidingSheet(
+        elevation: 0,
+        cornerRadius: 10,
+        color: Color.fromRGBO(241, 244, 251, 1),
+        snapSpec: const SnapSpec(
+          // Enable snapping. This is true by default.
+          snap: true,
+
+          // Set custom snapping points.
+          snappings: [0.65, 0.8],
+          // Define to what the snappings relate to. In this case,
+          // the total available space that the sheet can expand to.
+          positioning: SnapPositioning.relativeToAvailableSpace,
+        ),
+        // The body widget will be displayed under the SlidingSheet
+        // and a parallax effect can be applied to it.
+        body: 
+          Container(
             child: ListView(
           children: [
             Row(
@@ -461,21 +480,18 @@ class ListDetailState extends State<ListDetail> {
                                 blurRadius: 40)
                           ],
                         ),
-                        child: AnimatedPadding(
-                          duration: Duration(milliseconds: 300),
-                          padding: EdgeInsets.fromLTRB(_padding, 0, 0, 0),
+                        
                           child: Icon(
                             _icon,
                             color: _color,
                           ),
                         ),
-                      ),
+                      
                       onTap: () {
                         setState(() {
                           _width = 100;
                           _color = Colors.red;
                           _icon = Icons.cancel;
-                          _padding = 70;
                         });
                       }),
                 ),
@@ -528,374 +544,410 @@ Align(
                               onTap: () => showAsBottomSheet(),
                             )),
                       )),
-                      
-            
-             
-            Container(child: 
-            SingleChildScrollView(
-                child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Competition",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
+            ],
+          )),
+    
+        builder: (context, state) {
+          // This is the content of the sheet that will get
+          // scrolled, if the content is bigger than the available
+          // height of the sheet.
+          return Container(
+            height: 500,
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(241, 243, 246, 1),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: const Color.fromRGBO(0, 0, 0, .18),
+                        offset: Offset(0, 30),
+                        blurRadius: 90)
+                  ],
                 ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['competition']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 5, 0, 0),
+                        child: Text("Competition",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 20)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Weight",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['robot_weight']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data['competition']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 15));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Weight",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Frame Length",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text(
-                                '${snapshot.data['robot_frame_length']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data['robot_weight']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Frame Length",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Frame Width",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['robot_frame_width']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                    '${snapshot.data['robot_frame_length']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Frame Width",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Drivetrain Type",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text(
-                                '${snapshot.data['robot_drivetrain_type']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                    '${snapshot.data['robot_frame_width']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Drivetrain Type",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Height",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['robot_highlow']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                    '${snapshot.data['robot_drivetrain_type']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Height",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Goal",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['robot_goal']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data['robot_highlow']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Goal",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot CP Rotational Control",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getRot(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data['robot_goal']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot CP Rotational Control",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot CP Positional Control",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getPos(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getRot(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot CP Positional Control",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Vision Type",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['robot_vision_type']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getPos(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Vision Type",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Implements Autonomous",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getAuto(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text(
+                                    '${snapshot.data['robot_vision_type']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Implements Autonomous",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Climbs",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getClimb(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getAuto(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Climbs",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Robot Buddy Climb",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getBuddy(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getClimb(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Robot Buddy Climb",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text("Notes",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 15)),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: FutureBuilder<dynamic>(
-                        future: getData(),
-                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.hasData)
-                            return Text('${snapshot.data['notes']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 13));
-                          return Text("Loading");
-                        },
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getBuddy(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text("Notes",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold', fontSize: 15)),
                       ),
-                    )),
-                SizedBox(
-                  height: 70,
-                ),
-                
-              ],
-            )),
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return Text('${snapshot.data['notes']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 13));
+                              return Text("Loading");
+                            },
+                          ),
+                        )),
+                    SizedBox(
+                      height: 150,
+                    ),
+                  ],
+                )),
+              ),
             ),
-          ],
-        )),
-        );
+          );
+        },
+      ),
+    );
   }
 }

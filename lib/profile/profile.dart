@@ -15,6 +15,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   TabController controller;
 
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +28,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     getTeamNum();
     getTeamName();
     changeRoleColor();
+    getTeamMatchEntries(getTeamNum());
+    getTeamPitEntries(getTeamNum());
+
 
     DatabaseProvider.dbProvider.getToken();
   }
@@ -60,9 +64,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     }
   }
 
+  returnTeamNumber() async {
+    var num = await getTeamNum();
+    print(num);
+    return num;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var roleColor = changeRoleColor();
     void showAsBottomSheet() async {
       final result = await showSlidingBottomSheet(context, builder: (context) {
         return SlidingSheetDialog(
@@ -82,16 +91,123 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   child: InkWell(
                     onTap: () => Navigator.pop(context, 'This is the result.'),
                     child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text("TEST"),
-                              ],
-                            )
-                          ],
-                        )),
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                          child: Column(
+                        children: <Widget>[
+                          Container(
+                              child: Column(
+                            children: <Widget>[
+                              FutureBuilder<dynamic>(
+                                future: getMatchEntries(),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
+                                  return const CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Personal Match Entries",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(112, 112, 112, 1)))
+                            ],
+                          )),
+                          Container(
+                              child: Column(
+                            children: <Widget>[
+                              FutureBuilder<dynamic>(
+                                future: getPitEntries(),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
+                                  return const CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Personal Pit Entries",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(112, 112, 112, 1)))
+                            ],
+                          )),
+                          Container(
+                              child: Column(
+                            children: <Widget>[
+                              FutureBuilder<dynamic>(
+                                future: getTeamMatchEntries(810),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
+                                  return const CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Team Match Entries",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(112, 112, 112, 1)))
+                            ],
+                          )),
+                          Container(
+                              child: Column(
+                            children: <Widget>[
+                              FutureBuilder<dynamic>(
+                                future: getTeamPitEntries(810),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
+                                  return const CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Team Pit Entries",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(112, 112, 112, 1)))
+                            ],
+                          )),
+                          Container(
+                              child: Column(
+                            children: <Widget>[
+                              FutureBuilder<dynamic>(
+                                future: getGlobalMatchEntries(810),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
+                                  return const CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Global Match Entries",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(112, 112, 112, 1)))
+                            ],
+                          )),
+                        ],
+                      )),
+                    ),
                   ),
                 ),
               ),
@@ -102,7 +218,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
       print(result); // This is the result.
     }
-
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: Container(
