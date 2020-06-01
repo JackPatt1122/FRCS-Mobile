@@ -246,8 +246,6 @@ class ListDetailState extends State<ListDetail> {
   Color _color;
   IconData _icon;
 
-
-
   Future getData() async {
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text),
@@ -303,6 +301,19 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_control_panel_pos']);
   }
 
+    Future getEntryValidity() async {
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6'
+        });
+
+    return Future.value(json.decode(response.body)['is_incorrect']);
+  }
+
+  
+
   Future getRotData() async {
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text),
@@ -312,6 +323,16 @@ class ListDetailState extends State<ListDetail> {
         });
 
     return Future.value(json.decode(response.body)['robot_control_panel_rot']);
+  }
+
+    Future getValidity() async {
+    var data = await getEntryValidity();
+    if (data == true) {
+      return "! This data Is Incorrect !";
+    }
+    if (data == false) {
+      return " ";
+    }
   }
 
   Future getAuto() async {
@@ -373,7 +394,6 @@ class ListDetailState extends State<ListDetail> {
     _icon = Icons.error;
   }
 
-
   Future getTeamData() async {
     var response = await http.get(
         Uri.encodeFull(
@@ -386,6 +406,8 @@ class ListDetailState extends State<ListDetail> {
 
     return Future.value(json.decode(response.body));
   }
+
+
 
   Future getCompData() async {
     var response = await http.get(
@@ -400,6 +422,7 @@ class ListDetailState extends State<ListDetail> {
 
     return Future.value(json.decode(response.body));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -420,8 +443,7 @@ class ListDetailState extends State<ListDetail> {
         ),
         // The body widget will be displayed under the SlidingSheet
         // and a parallax effect can be applied to it.
-        body: 
-          Container(
+        body: Container(
             child: ListView(
           children: [
             Row(
@@ -480,13 +502,11 @@ class ListDetailState extends State<ListDetail> {
                                 blurRadius: 40)
                           ],
                         ),
-                        
-                          child: Icon(
-                            _icon,
-                            color: _color,
-                          ),
+                        child: Icon(
+                          _icon,
+                          color: _color,
                         ),
-                      
+                      ),
                       onTap: () {
                         setState(() {
                           _width = 100;
@@ -505,48 +525,65 @@ class ListDetailState extends State<ListDetail> {
                   if (snapshot.hasData)
                     return Text('${snapshot.data['nickname']}',
                         style: TextStyle(
-                            fontFamily: 'Poppins-Bold', fontSize: 20, color: Color.fromRGBO(102, 102, 102, 1)));
+                            fontFamily: 'Poppins-Bold',
+                            fontSize: 20,
+                            color: Color.fromRGBO(102, 102, 102, 1)));
                   return Text("Loading");
                 },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Padding(
                   padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                   child: Text(
                     "Team " + widget.text,
-                    style: TextStyle(fontSize: 18, color: Color.fromRGBO(102, 102, 102, 1)),
+                    style: TextStyle(
+                        fontSize: 18, color: Color.fromRGBO(102, 102, 102, 1)),
                   )),
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child:
+            FutureBuilder<dynamic>(
+                future: getValidity(),
+                builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.hasData)
+                    return Text('${snapshot.data}',
+                        style: TextStyle(
+                            fontFamily: 'Poppins-Bold',
+                            fontSize: 15,
+                            color: Colors.red));
+                  return Text("Loading");
+                },
+              ),
             ),
-Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20, left: 12, right: 12),
-                        child: Container(
-                            height: 40,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: Color.fromRGBO(233, 64, 87, 1),
-                            ),
-                            child: GestureDetector(
-                              child: Center(
-                                child: Text(
-                                  "Team Information",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Bold',
-                                      fontSize: 15,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              onTap: () => showAsBottomSheet(),
-                            )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 20, left: 12, right: 12),
+                  child: Container(
+                      height: 40,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: Color.fromRGBO(233, 64, 87, 1),
+                      ),
+                      child: GestureDetector(
+                        child: Center(
+                          child: Text(
+                            "Team Information",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Bold',
+                                fontSize: 15,
+                                color: Colors.white),
+                          ),
+                        ),
+                        onTap: () => showAsBottomSheet(),
                       )),
-            ],
-          )),
-    
+                )),
+          ],
+          
+        )),
+        
+
         builder: (context, state) {
           // This is the content of the sheet that will get
           // scrolled, if the content is bigger than the available

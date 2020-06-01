@@ -1,5 +1,4 @@
 import 'package:bloc_login/home.dart';
-import 'package:bloc_login/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
@@ -10,8 +9,7 @@ import 'package:bloc_login/bloc/authentication_bloc.dart';
 import 'package:bloc_login/splash/splash.dart';
 import 'package:bloc_login/login/login_page.dart';
 import 'package:bloc_login/common/common.dart';
-import 'package:bloc_login/data/matchList.dart';
-import 'package:bloc_login/data/hub.dart';
+
 
 
 class SimpleBlocDelegate extends BlocDelegate {
@@ -52,11 +50,12 @@ void main() {
   );
 }
 
-class App extends StatelessWidget {
+class App  extends StatelessWidget {
   
   final UserRepository userRepository;
 
   App({Key key, @required this.userRepository}) : super(key: key);
+
 
   @override
   Widget build (BuildContext context) {
@@ -66,6 +65,7 @@ class App extends StatelessWidget {
         brightness: Brightness.light,
         fontFamily: 'Poppins-Medium',
       ),
+      
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationUnintialized) {

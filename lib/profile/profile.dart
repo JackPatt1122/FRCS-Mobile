@@ -15,7 +15,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   TabController controller;
 
-
   @override
   void initState() {
     super.initState();
@@ -30,7 +29,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     changeRoleColor();
     getTeamMatchEntries(getTeamNum());
     getTeamPitEntries(getTeamNum());
-
 
     DatabaseProvider.dbProvider.getToken();
   }
@@ -55,6 +53,15 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     }
   }
 
+  getUserRoleWidget() async {
+    var role = await getTeamRole();
+    if (role == "Mentor") {
+      return Text("Team Management");
+    } else {
+      return null;
+    }
+  }
+
   changeRoleColor() async {
     var role = await getTeamRole();
     if (role == "Mentor") {
@@ -69,9 +76,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     print(num);
     return num;
   }
+  
+
+  
 
   @override
   Widget build(BuildContext context) {
+    
     void showAsBottomSheet() async {
       final result = await showSlidingBottomSheet(context, builder: (context) {
         return SlidingSheetDialog(
@@ -218,9 +229,79 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
       print(result); // This is the result.
     }
+
+    void showAsBottomSheet2() async {
+      final result = await showSlidingBottomSheet(context, builder: (context) {
+        return SlidingSheetDialog(
+          elevation: 8,
+          cornerRadius: 16,
+          snapSpec: const SnapSpec(
+            snap: true,
+            snappings: [0.4, 0.4],
+            positioning: SnapPositioning.relativeToAvailableSpace,
+          ),
+          builder: (context, state) {
+            return Container(
+              height: 400,
+              child: Center(
+                child: Material(
+                  child: InkWell(
+                    onTap: () => Navigator.pop(context, 'This is the result.'),
+                    child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            GestureDetector(
+                              child: Text(
+                                "Settings",
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-SemiBold',
+                                  fontSize: 18,
+                                ),
+                              ),
+                              onTap: () {},
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "Team Users",
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-SemiBold',
+                                  fontSize: 18,
+                                ),
+                              ),
+                              onTap: () {},
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-SemiBold',
+                                  fontSize: 18, 
+                                  color: Colors.red,
+                                ),
+                              ),
+                              onTap: () {
+                                BlocProvider.of<AuthenticationBloc>(context)
+                                    .add(LoggedOut());
+                              },
+                            ),
+                          ],
+                        )),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      });
+
+      print(result); // This is the result.
+    }
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: Container(
+        
         child: Column(
           children: <Widget>[
             Row(
@@ -228,6 +309,25 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
+                  child: GestureDetector(
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: Color.fromRGBO(241, 243, 246, 1),
+                       
+                      ),
+                      child: Center(
+                        child: Center(
+                          child: Icon(Icons.arrow_back, color: Color.fromRGBO(241, 243, 246, 1),),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
                   child: GestureDetector(
                     child: Container(
                       height: 30,
@@ -244,45 +344,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       ),
                       child: Center(
                         child: Center(
-                          child: Icon(Icons.arrow_back),
+                          child: Icon(Icons.menu),
                         ),
                       ),
                     ),
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => showAsBottomSheet2(),
                   ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color(0x29000000),
-                              offset: Offset(0, 0),
-                              blurRadius: 40)
-                        ],
-                      ),
-                      child: Container(
-                        child: Center(
-                          child: PopupMenuButton<String>(
-                            icon: Icon(Icons.menu),
-                            onSelected: choiceAction,
-                            itemBuilder: (BuildContext context) {
-                              return Constants.choices.map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(choice),
-                                );
-                              }).toList();
-                            },
-                          ),
-                        ),
-                      ),
-                    )),
               ],
             ),
             FutureBuilder<dynamic>(
@@ -463,18 +531,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
+    
     );
-  }
-
-  void choiceAction(String choice) {
-    if (choice == Constants.Settings) {
-      print('Settings');
-    } else if (choice == Constants.stats) {
-      print('Subscribe');
-    } else if (choice == Constants.members) {
-      print('SignOut');
-    } else if (choice == Constants.SignOut) {
-      BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-    }
   }
 }
