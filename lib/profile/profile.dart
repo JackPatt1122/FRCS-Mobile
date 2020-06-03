@@ -1,9 +1,9 @@
 import 'package:bloc_login/database/user_database.dart';
+import 'package:bloc_login/profile/ProfileSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
 
 import 'package:sliding_sheet/sliding_sheet.dart';
-import 'package:bloc_login/Constants.dart';
 import 'package:bloc_login/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -76,13 +76,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     print(num);
     return num;
   }
-  
-
-  
 
   @override
   Widget build(BuildContext context) {
-    
     void showAsBottomSheet() async {
       final result = await showSlidingBottomSheet(context, builder: (context) {
         return SlidingSheetDialog(
@@ -259,7 +255,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                   fontSize: 18,
                                 ),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProfileSettings()),
+                                );
+                              },
                             ),
                             GestureDetector(
                               child: Text(
@@ -276,7 +278,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 "Logout",
                                 style: TextStyle(
                                   fontFamily: 'Poppins-SemiBold',
-                                  fontSize: 18, 
+                                  fontSize: 18,
                                   color: Colors.red,
                                 ),
                               ),
@@ -301,7 +303,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: Container(
-        
         child: Column(
           children: <Widget>[
             Row(
@@ -316,11 +317,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
                         color: Color.fromRGBO(241, 243, 246, 1),
-                       
                       ),
                       child: Center(
                         child: Center(
-                          child: Icon(Icons.arrow_back, color: Color.fromRGBO(241, 243, 246, 1),),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(241, 243, 246, 1),
+                          ),
                         ),
                       ),
                     ),
@@ -531,7 +534,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-    
     );
   }
 }

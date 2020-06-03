@@ -290,6 +290,23 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_climb']);
   }
 
+    Future flagData() async {
+      
+    var response = await http.patch(
+      
+
+        Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text + "/"),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
+          
+        },
+        body: {'is_incorrect': 'true'},
+        );
+
+    return Future.value(json.decode(response.body));
+  }
+
   Future getPosData() async {
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text),
@@ -408,6 +425,34 @@ class ListDetailState extends State<ListDetail> {
   }
 
 
+  void _showDialog() {
+    showDialog(context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text("Flag Data"),
+          
+          actions: <Widget>[
+            new FlatButton(
+              color: Color.fromRGBO(233, 64, 87, 1),
+              
+              child: new Text("Flag Data"),
+
+              onPressed: () {
+                flagData();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+    });
+  }
+
 
   Future getCompData() async {
     var response = await http.get(
@@ -451,8 +496,7 @@ class ListDetailState extends State<ListDetail> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
-                  child: GestureDetector(
-                      child: Container(
+                      child: GestureDetector(child: Container(
                         height: 30,
                         width: 30,
                         decoration: BoxDecoration(
@@ -471,15 +515,10 @@ class ListDetailState extends State<ListDetail> {
                           ),
                         ),
                       ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        setState(() {
-                          _width = 100;
-                          _color = Colors.black;
-                          _icon = Icons.error;
-                        });
-                      }),
+                      onTap: () => Navigator.of(context).pop(),
+                      ),
                 ),
+                
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 12, 10),
                   child: GestureDetector(
@@ -507,13 +546,7 @@ class ListDetailState extends State<ListDetail> {
                           color: _color,
                         ),
                       ),
-                      onTap: () {
-                        setState(() {
-                          _width = 100;
-                          _color = Colors.red;
-                          _icon = Icons.cancel;
-                        });
-                      }),
+                      onTap: () => _showDialog()),
                 ),
               ],
             ),
