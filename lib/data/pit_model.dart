@@ -429,20 +429,43 @@ class ListDetailState extends State<ListDetail> {
     showDialog(context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        
         title: new Text("Flag Data"),
-          
+        content: new Text("This data will be marked as incorrect"),
           actions: <Widget>[
             new FlatButton(
               color: Color.fromRGBO(233, 64, 87, 1),
               
-              child: new Text("Flag Data"),
+              child: new Text("Flag"),
+              
 
               onPressed: () {
                 flagData();
               },
             ),
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text("Close", style: TextStyle(color: Colors.black)),
+
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+    });
+  }
+
+  void _showFlagHelp() {
+    showDialog(context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text("Incorrect Data"),
+        content: new Text("This data has been flagged as being potentially incorrect"),
+          
+          actions: <Widget>[
+            
+            new FlatButton(
+              child: new Text("Close", style: TextStyle(color: Colors.black),),
 
               onPressed: () {
                 Navigator.of(context).pop();
@@ -574,8 +597,8 @@ class ListDetailState extends State<ListDetail> {
                   )),
             Padding(
               padding: const EdgeInsets.only(left: 12),
-              child:
-            FutureBuilder<dynamic>(
+              child: GestureDetector(
+                child: FutureBuilder<dynamic>(
                 future: getValidity(),
                 builder: (context, AsyncSnapshot<dynamic> snapshot) {
                   if (snapshot.hasData)
@@ -587,6 +610,9 @@ class ListDetailState extends State<ListDetail> {
                   return Text("Loading");
                 },
               ),
+              onTap: () => _showFlagHelp(),
+              ),
+            
             ),
             Align(
                 alignment: Alignment.centerLeft,

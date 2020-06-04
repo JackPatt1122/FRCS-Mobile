@@ -6,6 +6,8 @@ import 'package:bloc_login/api_connection/profile_conection.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:bloc_login/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -14,6 +16,26 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   TabController controller;
+
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 500));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 500));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
 
   @override
   void initState() {
@@ -31,6 +53,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     getTeamPitEntries(getTeamNum());
 
     DatabaseProvider.dbProvider.getToken();
+  }
+
+  getProfileID() async {
+    var profile = await getProfileData();
+    return profile['user'];
   }
 
   getNameCreds() async {
@@ -247,20 +274,32 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           children: <Widget>[
-                            GestureDetector(
-                              child: Text(
-                                "Settings",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins-SemiBold',
-                                  fontSize: 18,
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProfileSettings()),
-                                );
+                            FutureBuilder<dynamic>(
+                              future: getProfileID(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return GestureDetector(
+                                    child: Text(
+                                      "Settings",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      print('${snapshot.data}');
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProfileSettings(
+                                                    text: '${snapshot.data}'
+                                                        .toString()),
+                                          ));
+                                    },
+                                  );
+                                return Text("Loading");
                               },
                             ),
                             GestureDetector(
@@ -302,236 +341,234 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
-                  child: GestureDetector(
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Color.fromRGBO(241, 243, 246, 1),
-                      ),
-                      child: Center(
-                        child: Center(
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Color.fromRGBO(241, 243, 246, 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
-                  child: GestureDetector(
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color(0x29000000),
-                              offset: Offset(0, 0),
-                              blurRadius: 40)
-                        ],
-                      ),
-                      child: Center(
-                        child: Center(
-                          child: Icon(Icons.menu),
-                        ),
-                      ),
-                    ),
-                    onTap: () => showAsBottomSheet2(),
-                  ),
-                ),
-              ],
-            ),
-            FutureBuilder<dynamic>(
-              future: getNameCreds(),
-              builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData)
-                  return Text(
-                    ' ${snapshot.data}',
-                    style: TextStyle(
-                        fontFamily: 'Poppins-SemiBold',
-                        fontSize: 25,
-                        color: Color.fromRGBO(102, 102, 102, 1)),
-                  );
-                return Text("Loading");
-              },
-            ),
-            Expanded(
-              child: Stack(
-                alignment: Alignment.topCenter,
+      body: SmartRefresher(
+        
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        
+        onLoading: _onLoading,
+        header: WaterDropHeader(),
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 100 / 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, .18),
-                              offset: Offset(0, 30),
-                              blurRadius: 90)
-                        ],
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            topLeft: Radius.circular(30)),
-                        color: Color.fromRGBO(241, 243, 246, 1),
-                      ),
-                      height: double.infinity,
+                    padding: const EdgeInsets.only(
+                      top: 30.0,
+                      left: 12,
                     ),
-                  ),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: ShapeDecoration(
-                      shape: BeveledRectangleBorder(),
-                      color: Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: FutureBuilder<dynamic>(
-                        future: getImageData(),
+                        future: getNameCreds(),
                         builder: (context, AsyncSnapshot<dynamic> snapshot) {
                           if (snapshot.hasData)
-                            return Image.network(
-                              '${snapshot.data}',
-                              height: 100,
-                              width: 100,
-                            );
+                            return AutoSizeText('${snapshot.data}',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-SemiBold',
+                                    fontSize: 25,
+                                    color: Color.fromRGBO(102, 102, 102, 1)),
+                                maxLines: 1,
+                                maxFontSize: 25);
                           return Text("Loading");
                         },
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Team",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins-SemiBold',
-                                  fontSize: 30,
-                                  color: Color.fromRGBO(102, 102, 102, 1)),
-                            ),
-                            FutureBuilder<dynamic>(
-                              future: getTeamNum(),
+                    padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
+                    child: GestureDetector(
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: const Color(0x29000000),
+                                offset: Offset(0, 0),
+                                blurRadius: 40)
+                          ],
+                        ),
+                        child: Center(
+                          child: Center(
+                            child: Icon(Icons.menu),
+                          ),
+                        ),
+                      ),
+                      onTap: () => showAsBottomSheet2(),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 100 / 2.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: const Color.fromRGBO(0, 0, 0, .18),
+                                offset: Offset(0, 30),
+                                blurRadius: 90)
+                          ],
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              topLeft: Radius.circular(30)),
+                          color: Color.fromRGBO(241, 243, 246, 1),
+                        ),
+                        height: double.infinity,
+                      ),
+                    ),
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: ShapeDecoration(
+                        shape: BeveledRectangleBorder(),
+                        color: Colors.transparent,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(0),
+                        child: FutureBuilder<dynamic>(
+                          future: getImageData(),
+                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.hasData)
+                              return Image.network(
+                                '${snapshot.data}',
+                                height: 100,
+                                width: 100,
+                              );
+                            return Text("Loading");
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Team",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-SemiBold',
+                                    fontSize: 30,
+                                    color: Color.fromRGBO(102, 102, 102, 1)),
+                              ),
+                              FutureBuilder<dynamic>(
+                                future: getTeamNum(),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text(
+                                      ' ${snapshot.data}',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-SemiBold',
+                                          fontSize: 30,
+                                          color:
+                                              Color.fromRGBO(102, 102, 102, 1)),
+                                    );
+                                  return Text("Loading");
+                                },
+                              ),
+                            ],
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: FutureBuilder<dynamic>(
+                              future: getTeamName(),
                               builder:
                                   (context, AsyncSnapshot<dynamic> snapshot) {
                                 if (snapshot.hasData)
                                   return Text(
                                     ' ${snapshot.data}',
                                     style: TextStyle(
-                                        fontFamily: 'Poppins-SemiBold',
-                                        fontSize: 30,
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 15,
                                         color:
                                             Color.fromRGBO(102, 102, 102, 1)),
                                   );
                                 return Text("Loading");
                               },
                             ),
-                          ],
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: FutureBuilder<dynamic>(
-                            future: getTeamName(),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          FutureBuilder<dynamic>(
+                            future: changeRoleColor(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return Text(
-                                  ' ${snapshot.data}',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Medium',
-                                      fontSize: 15,
-                                      color: Color.fromRGBO(102, 102, 102, 1)),
+                              if (snapshot.hasData) {
+                                return Container(
+                                  width: 110,
+                                  decoration: BoxDecoration(
+                                      color: snapshot.data,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  alignment: Alignment.center,
+                                  child: FutureBuilder<dynamic>(
+                                    future: getUserRole(),
+                                    builder: (context,
+                                        AsyncSnapshot<dynamic> snapshot) {
+                                      if (snapshot.hasData)
+                                        return Text(
+                                          ' ${snapshot.data}',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins-Medium',
+                                              fontSize: 20,
+                                              color: Colors.white),
+                                        );
+                                      return Text("Loading");
+                                    },
+                                  ),
                                 );
-                              return Text("Loading");
+                              }
+
+                              return null;
                             },
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        FutureBuilder<dynamic>(
-                          future: changeRoleColor(),
-                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.hasData) {
-                              return Container(
-                                width: 110,
-                                decoration: BoxDecoration(
-                                    color: snapshot.data,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                                alignment: Alignment.center,
-                                child: FutureBuilder<dynamic>(
-                                  future: getUserRole(),
-                                  builder: (context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    if (snapshot.hasData)
-                                      return Text(
-                                        ' ${snapshot.data}',
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins-Medium',
-                                            fontSize: 20,
-                                            color: Colors.white),
-                                      );
-                                    return Text("Loading");
-                                  },
-                                ),
-                              );
-                            }
-
-                            return null;
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Container(
-                            height: 40,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: Color.fromRGBO(233, 64, 87, 1),
-                            ),
-                            child: GestureDetector(
-                              child: Center(
-                                child: Text(
-                                  "View Entry Data",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Bold',
-                                      fontSize: 15,
-                                      color: Colors.white),
-                                ),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Container(
+                              height: 40,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                color: Color.fromRGBO(233, 64, 87, 1),
                               ),
-                              onTap: () => showAsBottomSheet(),
-                            )),
-                      )),
-                ],
-              ),
-            )
-          ],
+                              child: GestureDetector(
+                                child: Center(
+                                  child: Text(
+                                    "View Entry Data",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                                onTap: () => showAsBottomSheet(),
+                              )),
+                        )),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
