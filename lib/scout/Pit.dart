@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:random_string/random_string.dart';
+import 'dart:math' show Random;
 
 class PitScout extends StatefulWidget {
   @override
@@ -79,6 +80,10 @@ class _PitScoutState extends State<PitScout> {
     return Future.value(json.decode(response.body)['nickname']);
   }
 
+  createStatID() {
+    randomNumeric(15);
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the
@@ -89,9 +94,53 @@ class _PitScoutState extends State<PitScout> {
 
   final teamNumController = TextEditingController();
   final weightController = TextEditingController();
+  final lengthController = TextEditingController();
+  final widthController = TextEditingController();
+  final notesController = TextEditingController();
   String _comp;
   String _dtType;
   String _height;
+  String _goal;
+  String _vision;
+  String _auto;
+  String _climb;
+  String _buddy;
+  String _rot;
+  String _pos;
+  String _new;
+
+  
+
+  submitData() {
+     http.post(
+      
+
+        Uri.encodeFull("http://192.168.86.37:8000/api/pit/"),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
+          
+        },
+        body: {
+          "team_num": teamNumController.text,
+          "robot_weight": weightController.text,
+          "robot_frame_length": lengthController.text,
+          "robot_frame_width": widthController.text,
+          "robot_drivetrain_type": _dtType.toString(),
+          "robot_vision_type": _vision.toString(),
+          "robot_vision_implement": "No",
+          "robot_goal": _goal.toString(),
+          "robot_autonomous": _auto.toString(),
+          "robot_highlow": _height.toString(),
+          "robot_climb": _climb.toString(),
+          "robot_buddy_climb": _buddy.toString(),
+          "robot_control_panel_rot": _rot.toString(),
+          "robot_control_panel_pos": _pos.toString(),
+          "notes": notesController.text
+        }
+        );
+
+  }
 
   @override
   void initState() {
@@ -110,64 +159,79 @@ class _PitScoutState extends State<PitScout> {
         header: WaterDropHeader(),
         child: ListView(
           children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                  child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 10, 0, 0),
-                    child: GestureDetector(
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: const Color(0x29000000),
-                                offset: Offset(0, 0),
-                                blurRadius: 40)
-                          ],
-                        ),
-                        child: Center(
-                          child: Center(
-                            child: Icon(Icons.arrow_back),
+            Container(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(255, 89, 89, 1),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: const Color.fromRGBO(0, 0, 0, .5),
+                            offset: Offset(0, 0),
+                            blurRadius: 20)
+                      ],
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 10, 0, 0),
+                          child: GestureDetector(
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color(0x29000000),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 40)
+                                ],
+                              ),
+                              child: Center(
+                                child: Center(
+                                  child: Icon(Icons.arrow_back),
+                                ),
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).pop(),
                           ),
                         ),
-                      ),
-                      onTap: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(left: 12, top: 50),
-                        child: Text(
-                          "New Pit Entry",
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontFamily: 'Poppins-Bold',
-                              color: Color.fromRGBO(102, 102, 102, 1)),
-                        )),
-                  ),
-                  Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(left: 12, top: 85),
-                        child: Text(
-                          teamName.toString(),
-                          style: TextStyle(
-                              color: Color.fromRGBO(102, 102, 102, 1),
-                              fontSize: 18),
-                        )),
-                  ),
-                ],
-              )),
+                        Container(
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 12, top: 50),
+                              child: Text(
+                                "New Pit Entry",
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontFamily: 'Poppins-Bold',
+                                    color: Colors.white),
+                              )),
+                        ),
+                        Container(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 12, top: 85, bottom: 20),
+                              child: Text(
+                                teamName.toString(),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )),
+                        ),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
               child: TextFormField(
-                style: TextStyle(fontFamily: 'Poppins-Bold', fontSize: 30),
+                style: TextStyle(fontFamily: 'Poppins-Bold', fontSize: 25),
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 controller: teamNumController,
@@ -191,15 +255,15 @@ class _PitScoutState extends State<PitScout> {
                     child: DropdownButton<String>(
                       underline: SizedBox(),
                       disabledHint: Text(
-                        "Competition",
+                        "Team Competition",
                         style: TextStyle(
                           fontFamily: 'Poppins-Bold',
-                          fontSize: 30,
+                          fontSize: 25,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       icon: Icon(Icons.arrow_downward),
-                          iconSize: 24,
+                      iconSize: 24,
                       items: data.map((item) {
                         return new DropdownMenuItem(
                           child: Center(
@@ -222,14 +286,13 @@ class _PitScoutState extends State<PitScout> {
                         });
                       },
                       value: _comp,
-                      hint: Text("Competition",
+                      hint: Text("Team Competition",
                           style: TextStyle(
-                              fontFamily: 'Poppins-Bold', fontSize: 30),
+                              fontFamily: 'Poppins-Bold', fontSize: 25),
                           textAlign: TextAlign.center),
                     ),
                   ),
                 ),
-                
                 Center(
                     child: Column(
                   children: <Widget>[
@@ -238,7 +301,7 @@ class _PitScoutState extends State<PitScout> {
                           const EdgeInsets.only(left: 12, right: 12, top: 10),
                       child: TextFormField(
                         style:
-                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 30),
+                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 25),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
                         controller: weightController,
@@ -248,7 +311,7 @@ class _PitScoutState extends State<PitScout> {
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
-                          hintText: 'Weight',
+                          hintText: 'Robot Weight',
                         ),
                       ),
                     ),
@@ -257,17 +320,17 @@ class _PitScoutState extends State<PitScout> {
                           const EdgeInsets.only(left: 12, right: 12, top: 10),
                       child: TextFormField(
                         style:
-                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 30),
+                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 25),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
-                        controller: weightController,
+                        controller: lengthController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
-                          hintText: 'Frame Length',
+                          hintText: 'Robot Frame Length',
                         ),
                       ),
                     ),
@@ -276,17 +339,17 @@ class _PitScoutState extends State<PitScout> {
                           const EdgeInsets.only(left: 12, right: 12, top: 10),
                       child: TextFormField(
                         style:
-                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 30),
+                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 25),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
-                        controller: weightController,
+                        controller: widthController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
-                          hintText: 'Frame Width',
+                          hintText: 'Robot Frame Width',
                         ),
                       ),
                     ),
@@ -301,7 +364,6 @@ class _PitScoutState extends State<PitScout> {
                           iconSize: 24,
                           elevation: 16,
                           style: TextStyle(color: Colors.deepPurple),
-                          
                           onChanged: (String newValue) {
                             setState(() {
                               _height = newValue;
@@ -311,14 +373,18 @@ class _PitScoutState extends State<PitScout> {
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Center(child: Text(value, style: TextStyle(
-                                  fontFamily: 'Poppins-Bold', fontSize: 13, color: Colors.black)),
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
                               ),
                             );
                           }).toList(),
-                          hint: Text("Height",
+                          hint: Text("Robot Height",
                               style: TextStyle(
-                                  fontFamily: 'Poppins-Bold', fontSize: 30),
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
                               textAlign: TextAlign.center),
                         ),
                       ),
@@ -334,29 +400,394 @@ class _PitScoutState extends State<PitScout> {
                           iconSize: 24,
                           elevation: 16,
                           style: TextStyle(color: Colors.deepPurple),
-                          
                           onChanged: (String newValue) {
                             setState(() {
                               _dtType = newValue;
                             });
                           },
-                          items: <String>['4 Wheel Drivetrain', '6 Wheel Drivetrain', '8 Wheel Drivetrain', 'Treads', 'Omni', 'Swerve', 'Other']
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: <String>[
+                            '4 Wheel Drivetrain',
+                            '6 Wheel Drivetrain',
+                            '8 Wheel Drivetrain',
+                            'Treads',
+                            'Omni',
+                            'Swerve',
+                            'Other'
+                          ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Center(child: Text(value, style: TextStyle(
-                                  fontFamily: 'Poppins-Bold', fontSize: 17, color: Colors.black)),
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
                               ),
                             );
                           }).toList(),
-                          hint: Text("DriveTrain",
+                          hint: Text("Robot DriveTrain",
                               style: TextStyle(
-                                  fontFamily: 'Poppins-Bold', fontSize: 30),
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _goal,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _goal = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Low Goal',
+                            'High Goal',
+                            'Both Low and High',
+                            'None'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("Robot Goal",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _auto,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _auto = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("Robot Autonomous",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _climb,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _climb = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("Robot Climb",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _vision,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _vision = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'None',
+                            'Limelight',
+                            'Raspberry Pi',
+                            'Other'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("Robot Vision Type",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _buddy,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _buddy = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("Robot Buddy Climb",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _pos,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _pos = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("CP Position Control",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _rot,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _rot = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("CP Rotation Control",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 20),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          value: _new,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _new = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Center(
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text("New Robot",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-Bold', fontSize: 25),
                               textAlign: TextAlign.center),
                         ),
                       ),
                     ),
                     
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 12, right: 12, top: 10),
+                      child: TextFormField(
+                        style:
+                            TextStyle(fontFamily: 'Poppins-Bold', fontSize: 15),
+                        keyboardType: TextInputType.text,
+                        maxLines: null,
+                        textAlign: TextAlign.center,
+                        controller: notesController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          hintText: 'Notes',
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 12, right: 12), child:  Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Container(
+                              height: 40,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                color: Color.fromRGBO(233, 64, 87, 1),
+                              ),
+                              child: GestureDetector(
+                                child: Center(
+                                  child: Text(
+                                    "Submit Data",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                                onTap: () => submitData(),
+                              )),
+                        )),
+                    ),
+                   
                   ],
                 )),
               ],

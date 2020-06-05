@@ -1,7 +1,9 @@
 import 'package:bloc_login/database/user_database.dart';
 import 'package:bloc_login/profile/ProfileSettings.dart';
+import 'package:bloc_login/profile/team_users.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
+import 'PersonalPitEntries.dart';
 
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:bloc_login/bloc/authentication_bloc.dart';
@@ -143,7 +145,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             fontSize: 40,
                                             color: Color.fromRGBO(
                                                 112, 112, 112, 1)));
-                                  return const CircularProgressIndicator();
+                                  return Text('0',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
                                 },
                               ),
                               Text("Personal Match Entries",
@@ -165,7 +172,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             fontSize: 40,
                                             color: Color.fromRGBO(
                                                 112, 112, 112, 1)));
-                                  return const CircularProgressIndicator();
+                                  return Text('0',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
                                 },
                               ),
                               Text("Personal Pit Entries",
@@ -187,7 +199,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             fontSize: 40,
                                             color: Color.fromRGBO(
                                                 112, 112, 112, 1)));
-                                  return const CircularProgressIndicator();
+                                  return Text('0',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
                                 },
                               ),
                               Text("Team Match Entries",
@@ -209,7 +226,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             fontSize: 40,
                                             color: Color.fromRGBO(
                                                 112, 112, 112, 1)));
-                                  return const CircularProgressIndicator();
+                                  return Text('0',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
                                 },
                               ),
                               Text("Team Pit Entries",
@@ -231,7 +253,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             fontSize: 40,
                                             color: Color.fromRGBO(
                                                 112, 112, 112, 1)));
-                                  return const CircularProgressIndicator();
+                                  return Text('0',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Bold',
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                112, 112, 112, 1)));
                                 },
                               ),
                               Text("Global Match Entries",
@@ -266,14 +293,17 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
           builder: (context, state) {
             return Container(
               height: 400,
-              child: Center(
-                child: Material(
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context, 'This is the result.'),
-                    child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: <Widget>[
+              child: Material(
+                child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0),
+                          child: Row(children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.insert_chart)),
                             FutureBuilder<dynamic>(
                               future: getProfileID(),
                               builder:
@@ -281,14 +311,49 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 if (snapshot.hasData)
                                   return GestureDetector(
                                     child: Text(
-                                      "Settings",
+                                      "Match Entries",
                                       style: TextStyle(
                                         fontFamily: 'Poppins-SemiBold',
                                         fontSize: 18,
                                       ),
                                     ),
                                     onTap: () {
-                                      print('${snapshot.data}');
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PersonalPitEntries(
+                                                  text: '${snapshot.data}'
+                                                        .toString(),
+                                                    ),
+                                          ));
+                                    },
+                                  );
+                                return Text("Match Entries");
+                              },
+                            ),
+                          ]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Row(children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.clear_all)),
+                            FutureBuilder<dynamic>(
+                              future: getProfileID(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return GestureDetector(
+                                    child: Text(
+                                      "Pit Entries",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -299,18 +364,126 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           ));
                                     },
                                   );
-                                return Text("Loading");
+                                return Text("Pit Entries");
                               },
                             ),
-                            GestureDetector(
-                              child: Text(
-                                "Team Users",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins-SemiBold',
-                                  fontSize: 18,
+                          ]),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 5, top: 60),
+                          child: Row(children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(Icons.settings),
+                            ),
+                            FutureBuilder<dynamic>(
+                              future: getProfileID(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return GestureDetector(
+                                    child: Text(
+                                      "Profile Settings",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProfileSettings(
+                                                    text: '${snapshot.data}'
+                                                        .toString()),
+                                          ));
+                                    },
+                                  );
+                                return Text("Profile Settings");
+                              },
+                            ),
+                          ]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 90),
+                          child: Row(children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.settings)),
+                            FutureBuilder<dynamic>(
+                              future: getProfileID(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return GestureDetector(
+                                    child: Text(
+                                      "Account Settings",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProfileSettings(
+                                                    text: '${snapshot.data}'
+                                                        .toString()),
+                                          ));
+                                    },
+                                  );
+                                return Text("Account Settings");
+                              },
+                            ),
+                          ]),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(top: 120.0),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Icon(Icons.supervisor_account),
+                                  
                                 ),
-                              ),
-                              onTap: () {},
+                                 FutureBuilder<dynamic>(
+                              future: getProfileID(),
+                              builder:
+                                  (context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.hasData)
+                                  return GestureDetector(
+                                    child: Text(
+                                      "Team Users",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins-SemiBold',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TeamUsers(
+                                                    text: '${snapshot.data}'
+                                                        .toString()),
+                                          ));
+                                    },
+                                  );
+                                return Text("Team Users");
+                              },
+                            ),
+                              ],
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 150.0),
+                          child: Row(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Icon(Icons.close, color: Colors.red),
                             ),
                             GestureDetector(
                               child: Text(
@@ -326,10 +499,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     .add(LoggedOut());
                               },
                             ),
-                          ],
-                        )),
-                  ),
-                ),
+                          ]),
+                        ),
+                      ],
+                    )),
               ),
             );
           },
@@ -342,10 +515,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 243, 246, 1),
       body: SmartRefresher(
-        
         controller: _refreshController,
         onRefresh: _onRefresh,
-        
         onLoading: _onLoading,
         header: WaterDropHeader(),
         child: Container(

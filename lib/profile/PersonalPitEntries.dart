@@ -5,32 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
-class TeamUsers extends StatefulWidget {
+
+class PersonalPitEntries extends StatefulWidget {
   @override
-  TeamUsersState createState() => new TeamUsersState();
+  _PersonalPitEntriesState createState() => _PersonalPitEntriesState();
 
   final String text;
 
-  TeamUsers({Key key, @required this.text}) : super(key: key);
+  PersonalPitEntries({Key key, @required this.text}) : super(key: key);
+
 }
 
-class TeamUsersState extends State {
-
+class _PersonalPitEntriesState extends State<PersonalPitEntries> {
   List data;
 
   Future<String> getData() async {
     var response = await http.get(
-      Uri.encodeFull("http://192.168.86.37:8000/api/team/810"),
+      Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
       headers: {
         "Accept": "application/json"
       }
     );
 
     this.setState(() {
-      data = json.decode(response.body)['team_users'];
+      data = json.decode(response.body);
     });
     
-    print(data);
+    print(data[1]["title"]);
     
     return "Success!";
   }
@@ -41,17 +42,19 @@ class TeamUsersState extends State {
   }
 
   @override
-  Widget build(BuildContext context){
-    return new Scaffold(
-      appBar: new AppBar(title: new Text("Listviews"), backgroundColor: Colors.blue),
-      body: new ListView.builder(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Material(
+        child: ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index){
           return new Card(
-            child: new Text(data[index]),
+            child: new Text(data[index]["title"]),
           );
         },
       ),
+      ),
+      
     );
   }
 }

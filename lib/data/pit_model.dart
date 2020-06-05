@@ -290,19 +290,15 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_climb']);
   }
 
-    Future flagData() async {
-      
+  Future flagData() async {
     var response = await http.patch(
-      
-
-        Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text + "/"),
-        headers: {
-          "Accept": "application/json",
-          'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
-          
-        },
-        body: {'is_incorrect': 'true'},
-        );
+      Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text + "/"),
+      headers: {
+        "Accept": "application/json",
+        'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
+      },
+      body: {'is_incorrect': 'true'},
+    );
 
     return Future.value(json.decode(response.body));
   }
@@ -318,7 +314,7 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_control_panel_pos']);
   }
 
-    Future getEntryValidity() async {
+  Future getEntryValidity() async {
     var response = await http.get(
         Uri.encodeFull("http://192.168.86.37:8000/api/pit/" + widget.text),
         headers: {
@@ -328,8 +324,6 @@ class ListDetailState extends State<ListDetail> {
 
     return Future.value(json.decode(response.body)['is_incorrect']);
   }
-
-  
 
   Future getRotData() async {
     var response = await http.get(
@@ -342,7 +336,7 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_control_panel_rot']);
   }
 
-    Future getValidity() async {
+  Future getValidity() async {
     var data = await getEntryValidity();
     if (data == true) {
       return "! This data Is Incorrect !";
@@ -424,58 +418,54 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body));
   }
 
-
   void _showDialog() {
-    showDialog(context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        
-        title: new Text("Flag Data"),
-        content: new Text("This data will be marked as incorrect"),
-          actions: <Widget>[
-            new FlatButton(
-              color: Color.fromRGBO(233, 64, 87, 1),
-              
-              child: new Text("Flag"),
-              
-
-              onPressed: () {
-                flagData();
-              },
-            ),
-            new FlatButton(
-              child: new Text("Close", style: TextStyle(color: Colors.black)),
-
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Flag Data"),
+            content: new Text("This data will be marked as incorrect"),
+            actions: <Widget>[
+              new FlatButton(
+                color: Color.fromRGBO(233, 64, 87, 1),
+                child: new Text("Flag"),
+                onPressed: () {
+                  flagData();
+                },
+              ),
+              new FlatButton(
+                child: new Text("Close", style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void _showFlagHelp() {
-    showDialog(context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: new Text("Incorrect Data"),
-        content: new Text("This data has been flagged as being potentially incorrect"),
-          
-          actions: <Widget>[
-            
-            new FlatButton(
-              child: new Text("Close", style: TextStyle(color: Colors.black),),
-
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Incorrect Data"),
+            content: new Text(
+                "This data has been flagged as being potentially incorrect"),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text(
+                  "Close",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
-
 
   Future getCompData() async {
     var response = await http.get(
@@ -491,179 +481,158 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body));
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SlidingSheet(
-        elevation: 0,
-        cornerRadius: 10,
-        color: Color.fromRGBO(241, 244, 251, 1),
-        snapSpec: const SnapSpec(
-          // Enable snapping. This is true by default.
-          snap: true,
-
-          // Set custom snapping points.
-          snappings: [0.65, 0.8],
-          // Define to what the snappings relate to. In this case,
-          // the total available space that the sheet can expand to.
-          positioning: SnapPositioning.relativeToAvailableSpace,
-        ),
-        // The body widget will be displayed under the SlidingSheet
-        // and a parallax effect can be applied to it.
-        body: Container(
+      body: Container(
             child: ListView(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
-                      child: GestureDetector(child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: const Color(0x29000000),
-                                offset: Offset(0, 0),
-                                blurRadius: 40)
-                          ],
-                        ),
-                        child: Center(
-                          child: Center(
-                            child: Icon(Icons.arrow_back),
-                          ),
-                        ),
-                      ),
-                      onTap: () => Navigator.of(context).pop(),
-                      ),
-                ),
-                
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 12, 10),
-                  child: GestureDetector(
-                      child: AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        curve: Interval(
-                          0.125,
-                          0.250,
-                          curve: Curves.easeInOutExpo,
-                        ),
-                        height: 30,
-                        width: _width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: const Color(0x29000000),
-                                offset: Offset(0, 0),
-                                blurRadius: 40)
-                          ],
-                        ),
-                        child: Icon(
-                          _icon,
-                          color: _color,
-                        ),
-                      ),
-                      onTap: () => _showDialog()),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-              child: FutureBuilder<dynamic>(
-                future: getTeamData(),
-                builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData)
-                    return Text('${snapshot.data['nickname']}',
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold',
-                            fontSize: 20,
-                            color: Color.fromRGBO(102, 102, 102, 1)));
-                  return Text("Loading");
-                },
-              ),
-            ),
-            Padding(
-                  padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                  child: Text(
-                    "Team " + widget.text,
-                    style: TextStyle(
-                        fontSize: 18, color: Color.fromRGBO(102, 102, 102, 1)),
-                  )),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: GestureDetector(
-                child: FutureBuilder<dynamic>(
-                future: getValidity(),
-                builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData)
-                    return Text('${snapshot.data}',
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Bold',
-                            fontSize: 15,
-                            color: Colors.red));
-                  return Text("Loading");
-                },
-              ),
-              onTap: () => _showFlagHelp(),
-              ),
-            
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 20, left: 12, right: 12),
-                  child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        color: Color.fromRGBO(233, 64, 87, 1),
-                      ),
-                      child: GestureDetector(
-                        child: Center(
-                          child: Text(
-                            "Team Information",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold',
-                                fontSize: 15,
-                                color: Colors.white),
-                          ),
-                        ),
-                        onTap: () => showAsBottomSheet(),
-                      )),
-                )),
-          ],
-          
-        )),
-        
-
-        builder: (context, state) {
-          // This is the content of the sheet that will get
-          // scrolled, if the content is bigger than the available
-          // height of the sheet.
-          return Container(
-            height: 500,
-            child: Center(
-              child: Container(
+            Container(
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(241, 243, 246, 1),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.0),
-                  ),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+                  color: Color.fromRGBO(233, 64, 87, 1),
                   boxShadow: [
                     BoxShadow(
-                        color: const Color.fromRGBO(0, 0, 0, .18),
-                        offset: Offset(0, 30),
-                        blurRadius: 90)
+                        color: const Color(0x29000000),
+                        offset: Offset(0, 0),
+                        blurRadius: 40)
                   ],
                 ),
-                child: SingleChildScrollView(
+                child: Stack(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+                          child: GestureDetector(
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color(0x29000000),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 40)
+                                ],
+                              ),
+                              child: Center(
+                                child: Center(
+                                  child: Icon(Icons.arrow_back),
+                                ),
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 12, 10),
+                          child: GestureDetector(
+                              child: AnimatedContainer(
+                                duration: Duration(seconds: 1),
+                                curve: Interval(
+                                  0.125,
+                                  0.250,
+                                  curve: Curves.easeInOutExpo,
+                                ),
+                                height: 30,
+                                width: _width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: const Color(0x29000000),
+                                        offset: Offset(0, 0),
+                                        blurRadius: 40)
+                                  ],
+                                ),
+                                child: Icon(
+                                  _icon,
+                                  color: _color,
+                                ),
+                              ),
+                              onTap: () => _showDialog()),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(12, 40, 0, 0),
+                      child: FutureBuilder<dynamic>(
+                        future: getTeamData(),
+                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.hasData)
+                            return Text('${snapshot.data['nickname']}',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold',
+                                    fontSize: 20,
+                                    color: Colors.white));
+                          return Text("Loading");
+                        },
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(12, 65, 0, 0),
+                        child: Text(
+                          "Team " + widget.text,
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, top: 90),
+                      child: GestureDetector(
+                        child: FutureBuilder<dynamic>(
+                          future: getValidity(),
+                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.hasData)
+                              return Text('${snapshot.data}',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Bold',
+                                      fontSize: 15,
+                                      color: Colors.red));
+                            return Text("Loading");
+                          },
+                        ),
+                        onTap: () => _showFlagHelp(),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              bottom: 20, left: 12, right: 12, top: 100),
+                          child: Container(
+                              height: 40,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+                                color: Colors.white,
+                              ),
+                              child: GestureDetector(
+                                child: Center(
+                                  child: Text(
+                                    "Team Information",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Color.fromRGBO(233, 64, 87, 1)),
+                                  ),
+                                ),
+                                onTap: () => showAsBottomSheet(),
+                              )),
+                        )),
+                  ],
+                  
+                )),
+                Container(
+            height: 500,
+            child: Center(
+              child: SingleChildScrollView(
                     child: Column(
                   children: <Widget>[
                     Align(
@@ -1041,9 +1010,12 @@ class ListDetailState extends State<ListDetail> {
                 )),
               ),
             ),
-          );
-        },
-      ),
+          
+          ],
+        )),
+        
+
+       
     );
   }
 }
