@@ -179,7 +179,7 @@ class _PitScoutState extends State<PitScout> {
                     child: Stack(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 10, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
                           child: GestureDetector(
                             child: Container(
                               height: 30,
@@ -205,7 +205,7 @@ class _PitScoutState extends State<PitScout> {
                         ),
                         Container(
                           child: Padding(
-                              padding: EdgeInsets.only(left: 12, top: 50),
+                              padding: EdgeInsets.only(left: 12, top: 60),
                               child: Text(
                                 "New Pit Entry",
                                 style: TextStyle(
@@ -217,7 +217,7 @@ class _PitScoutState extends State<PitScout> {
                         Container(
                           child: Padding(
                               padding: EdgeInsets.only(
-                                  left: 12, top: 85, bottom: 20),
+                                  left: 12, top: 95, bottom: 15),
                               child: Text(
                                 teamName.toString(),
                                 style: TextStyle(

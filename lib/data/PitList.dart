@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:bloc_login/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,9 +9,7 @@ import 'package:bloc_login/scout/Pit.dart';
 
 import 'package:bloc_login/api_connection/profile_conection.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-
-
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class PitList extends StatefulWidget {
   @override
@@ -22,6 +19,8 @@ class PitList extends StatefulWidget {
 class HomePageState extends State {
   List data;
   String selectedItem;
+  double _leftPadding = 20;
+  double _opacity = 0;
 
   final myController = TextEditingController();
 
@@ -43,9 +42,26 @@ class HomePageState extends State {
     return "Success!";
   }
 
+  _changePadding() {
+    setState(() {
+      _leftPadding = 0;
+    });
+  }
+
+  _changeOpacity() {
+    setState(() {
+      _opacity = 1;
+    });
+  }
+
   @override
   void initState() {
     this.getData();
+    _leftPadding = 20;
+    Timer(const Duration(milliseconds: 500), () {
+      _changePadding();
+      _changeOpacity();
+    });
   }
 
   @override
@@ -90,35 +106,12 @@ class HomePageState extends State {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 25, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(12, 30, 0, 0),
                       child: Text("Pit Entries",
                           style: TextStyle(
                               fontSize: 25,
                               fontFamily: 'Poppins-Bold',
                               color: Color.fromRGBO(102, 102, 102, 1))),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Profile()),
-                          );
-                        },
-                        icon: FutureBuilder<dynamic>(
-                          future: getImageData(),
-                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.hasData)
-                              return Image.network(
-                                '${snapshot.data}',
-                                height: 45,
-                                width: 45,
-                              );
-                            return Text("Loading");
-                          },
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -181,99 +174,168 @@ class HomePageState extends State {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 90),
-                  child: ListView.builder(
-                    itemCount: data == null ? 0 : data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: Card(
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                selected: data[index] == selectedItem,
-                                title: Text(
-                                  data[index]['team_num'].toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Bold', fontSize: 20),
-                                ),
-                                subtitle: FutureBuilder<dynamic>(
-                                  future: getTeamNameList(
-                                      data[index]['team_num'].toString()),
-                                  builder: (context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    if (snapshot.hasData)
-                                      return Text(
-                                        ' ${snapshot.data}',
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins-Medium',
-                                            fontSize: 15),
-                                      );
-                                    return Text("Loading");
-                                  },
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedItem =
-                                        data[index]['team_num'].toString();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ListDetail(
-                                            text: selectedItem,
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      
+                      itemCount: data == null ? 0 : data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        
+                        return AnimationConfiguration.staggeredList(
+                          
+                            position: index,
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Container(
+                                    height: 75,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(7)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: const Color(0x29000000),
+                                            offset: Offset(0, 0),
+                                            blurRadius: 40)
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        ListTile(
+                                          selected: data[index] == selectedItem,
+                                          title: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                left: _leftPadding),
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            curve: Curves.easeInOutExpo,
+                                            child: AnimatedOpacity(
+                                              opacity: _opacity,
+                                              duration:
+                                                  Duration(milliseconds: 400),
+                                              curve: Curves.easeInOutExpo,
+                                              child: Text(
+                                                data[index]['team_num']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins-Bold',
+                                                    fontSize: 20),
+                                              ),
+                                            ),
                                           ),
-                                        ));
-                                  });
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                                          subtitle: FutureBuilder<dynamic>(
+                                            future: getTeamNameList(data[index]
+                                                    ['team_num']
+                                                .toString()),
+                                            builder: (context,
+                                                AsyncSnapshot<dynamic>
+                                                    snapshot) {
+                                              if (snapshot.hasData)
+                                                return AnimatedPadding(
+                                                  padding: EdgeInsets.only(
+                                                      left: _leftPadding),
+                                                  duration: Duration(
+                                                      milliseconds: 600),
+                                                  curve: Curves.easeInOutExpo,
+                                                  child: AnimatedOpacity(
+                                                      opacity: _opacity,
+                                                      duration: Duration(
+                                                          milliseconds: 500),
+                                                      curve:
+                                                          Curves.easeInOutExpo,
+                                                      child: Text(
+                                                          ' ${snapshot.data}',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins-Medium',
+                                                              fontSize: 15))),
+                                                );
+                                              return AnimatedPadding(
+                                                  padding: EdgeInsets.only(
+                                                      left: _leftPadding),
+                                                  duration: Duration(
+                                                      milliseconds: 600),
+                                                  curve: Curves.easeInOutExpo,
+                                                  child: AnimatedOpacity(
+                                                      opacity: _opacity,
+                                                      duration: Duration(
+                                                          milliseconds: 500),
+                                                      curve:
+                                                          Curves.easeInOutExpo,
+                                                      child: Text("Loading")));
+                                            },
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              selectedItem = data[index]
+                                                      ['team_num']
+                                                  .toString();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ListDetail(
+                                                      text: selectedItem,
+                                                    ),
+                                                  ));
+                                            });
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ));
+                      },
+                    ),
                   ),
                 ),
                 Positioned(
-                    bottom: 5,
-                    right: 5,
-                    child: FutureBuilder<dynamic>(
-                              future: getTeamNum(),
-                              builder:
-                                  (context, AsyncSnapshot<dynamic> snapshot) {
-                                if (snapshot.hasData)
-                                  return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PitScout(text: '${snapshot.data}'
-                                                        .toString())));
-                        
-                      },
-                      child: Container(
-                          width: 110,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(7)),
-                            gradient: LinearGradient(
-                                begin: Alignment(-1.0, -0.5),
-                                end: Alignment(1.5, 0.5),
-                                colors: [
-                                  Color.fromRGBO(242, 113, 33, 1),
-                                  Color.fromRGBO(233, 64, 87, 1),
-                                  Color.fromRGBO(138, 35, 135, 1),
-                                ]),
-                          ),
-                          child: Center(
-                            child: Text("New Entry",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'Poppins-Bold',
-                                    color: Colors.white)),
-                          )),
-                    );
-                                return Text("Loading");
-                              },
-                            ), )
+                  bottom: 5,
+                  right: 5,
+                  child: FutureBuilder<dynamic>(
+                    future: getTeamNum(),
+                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.hasData)
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PitScout(
+                                        text: '${snapshot.data}'.toString())));
+                          },
+                          child: Container(
+                              width: 110,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(7)),
+                                gradient: LinearGradient(
+                                    begin: Alignment(-1.0, -0.5),
+                                    end: Alignment(1.5, 0.5),
+                                    colors: [
+                                      Color.fromRGBO(242, 113, 33, 1),
+                                      Color.fromRGBO(233, 64, 87, 1),
+                                      Color.fromRGBO(138, 35, 135, 1),
+                                    ]),
+                              ),
+                              child: Center(
+                                child: Text("New Entry",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Poppins-Bold',
+                                        color: Colors.white)),
+                              )),
+                        );
+                      return Text("New Entry");
+                    },
+                  ),
+                )
               ],
             )));
   }
