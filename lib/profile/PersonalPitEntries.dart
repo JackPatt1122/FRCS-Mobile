@@ -21,7 +21,7 @@ class _PersonalPitEntriesState extends State<PersonalPitEntries> {
 
   Future<String> getData() async {
     var response = await http.get(
-      Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
+      Uri.encodeFull("http:192.168.86.37/api/user/"),
       headers: {
         "Accept": "application/json"
       }

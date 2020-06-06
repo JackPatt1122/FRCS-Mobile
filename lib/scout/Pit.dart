@@ -4,7 +4,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:random_string/random_string.dart';
-import 'dart:math' show Random;
+import 'pitdone.dart';
+import 'package:bloc_login/dao/user_dao.dart';
+import 'package:bloc_login/api_connection/profile_conection.dart';
+import 'package:bloc_login/profile/profile.dart';
 
 class PitScout extends StatefulWidget {
   @override
@@ -60,6 +63,8 @@ class _PitScoutState extends State<PitScout> {
     return Future.value(json.decode(response.body));
   }
 
+
+  
   getTeamName(num) async {
     var response = await http.get(
         Uri.encodeFull("https://www.thebluealliance.com/api/v3/team/frc" + num),
@@ -81,7 +86,8 @@ class _PitScoutState extends State<PitScout> {
   }
 
   createStatID() {
-    randomNumeric(15);
+    var number = randomNumeric(15);
+    return number;
   }
 
   @override
@@ -91,6 +97,57 @@ class _PitScoutState extends State<PitScout> {
     teamNumController.dispose();
     super.dispose();
   }
+
+    double _leftPadding = 25;
+  double _opacity = 0;
+  double  _containerHeight = 0;
+
+  _changePadding() {
+    setState(() {
+      _leftPadding = 12;
+    });
+  }
+
+  _changeOpacity() {
+    setState(() {
+      _opacity = 1;
+    });
+  }
+
+   _changeHeight() {
+    setState(() {
+      _containerHeight = 140;
+    });
+  }
+
+  getProfile() async {
+    var token = await UserDao().getToken(0);
+    var user = await getUserData();
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Token:' + token
+        });
+
+
+    return Future.value(json.decode(response.body)['profile']);
+  }
+
+
+
+
+  getProfileID() async {
+    var profile = await getProfile();
+    print(profile['user']);
+    return profile['user'];
+  }
+
+  getID(data){
+    return data;
+  }
+  
+
 
   final teamNumController = TextEditingController();
   final weightController = TextEditingController();
@@ -109,26 +166,29 @@ class _PitScoutState extends State<PitScout> {
   String _pos;
   String _new;
 
-  
+
 
   submitData() {
      http.post(
       
 
-        Uri.encodeFull("http://192.168.86.37:8000/api/pit/"),
+        Uri.encodeFull("http://192.168.86.37:8000/api/pitcreation/"),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
           
         },
         body: {
-          "team_num": teamNumController.text,
+          "team_num": teamNumController.text.toString(),
+          "competition": _comp,
+          "scout": getProfileID().toString(),
+          "scouted_team_num": widget.text.toString(),
           "robot_weight": weightController.text,
-          "robot_frame_length": lengthController.text,
-          "robot_frame_width": widthController.text,
+          "robot_frame_length": lengthController.text.toString(),
+          "robot_frame_width": widthController.text.toString(),
           "robot_drivetrain_type": _dtType.toString(),
           "robot_vision_type": _vision.toString(),
-          "robot_vision_implement": "No",
+          "robot_vision_implement": "No".toString(),
           "robot_goal": _goal.toString(),
           "robot_autonomous": _auto.toString(),
           "robot_highlow": _height.toString(),
@@ -136,7 +196,12 @@ class _PitScoutState extends State<PitScout> {
           "robot_buddy_climb": _buddy.toString(),
           "robot_control_panel_rot": _rot.toString(),
           "robot_control_panel_pos": _pos.toString(),
-          "notes": notesController.text
+          "is_new_robot": _new.toString(),
+          "notes": notesController.text,
+          "stat_id": createStatID().toString(),
+          
+
+
         }
         );
 
@@ -147,6 +212,19 @@ class _PitScoutState extends State<PitScout> {
     super.initState();
     this.getCompsList();
     teamName = "No Team Entered";
+     _leftPadding = 25;
+    _opacity = 0;
+    Timer(const Duration(milliseconds: 0), () {
+          _changeHeight();
+
+
+    });
+
+    Timer(const Duration(milliseconds: 500), () {
+      _changePadding();
+      _changeOpacity();
+
+    });
   }
 
   @override
@@ -162,7 +240,10 @@ class _PitScoutState extends State<PitScout> {
             Container(
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Container(
+                child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOutExpo,
+              height: _containerHeight,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(255, 89, 89, 1),
@@ -204,8 +285,10 @@ class _PitScoutState extends State<PitScout> {
                           ),
                         ),
                         Container(
-                          child: Padding(
-                              padding: EdgeInsets.only(left: 12, top: 60),
+                          child: AnimatedPadding(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOutExpo,
+                              padding: EdgeInsets.only(left: _leftPadding, top: 60),
                               child: Text(
                                 "New Pit Entry",
                                 style: TextStyle(
@@ -283,6 +366,7 @@ class _PitScoutState extends State<PitScout> {
                       onChanged: (newVal) {
                         setState(() {
                           _comp = newVal;
+                          getProfileID();
                         });
                       },
                       value: _comp,
@@ -783,10 +867,15 @@ class _PitScoutState extends State<PitScout> {
                                         color: Colors.white),
                                   ),
                                 ),
-                                onTap: () => submitData(),
+                                onTap: () { submitData();  Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PitDone()
+                                          ));
+                            }),
                               )),
                         )),
-                    ),
+                    
                    
                   ],
                 )),

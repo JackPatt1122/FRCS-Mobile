@@ -58,7 +58,7 @@ class HomePageState extends State {
   void initState() {
     this.getData();
     _leftPadding = 20;
-    Timer(const Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 300), () {
       _changePadding();
       _changeOpacity();
     });
@@ -89,6 +89,7 @@ class HomePageState extends State {
 
     if (mounted) setState(() {});
     _refreshController.loadComplete();
+    setState(() {});
   }
 
   @override
@@ -134,6 +135,7 @@ class HomePageState extends State {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 7, right: 7),
                       child: TextFormField(
+                        keyboardType:  TextInputType.number,
                         controller: myController,
                         decoration: InputDecoration(
                             labelText: 'Team Number',
@@ -181,12 +183,12 @@ class HomePageState extends State {
                       itemBuilder: (BuildContext context, int index) {
                         
                         return AnimationConfiguration.staggeredList(
-                          
-                            position: index,
-                            child: SlideAnimation(
-                              verticalOffset: 50.0,
-                              child: FadeInAnimation(
-                                child: Padding(
+            position: index,
+            duration: const Duration(milliseconds: 375),
+            child: SlideAnimation(
+              verticalOffset: 50.0,
+              child: FadeInAnimation(
+                child: Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: Container(
                                     height: 75,

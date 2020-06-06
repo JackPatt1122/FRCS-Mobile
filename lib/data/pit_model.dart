@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
-
 class ListDetail extends StatefulWidget {
   final String text;
 
@@ -71,9 +70,11 @@ class ListDetailState extends State<ListDetail> {
                                       style: TextStyle(
                                           fontFamily: 'Poppins-Medium',
                                           fontSize: 13));
-                                return Text("Loading", style: TextStyle(
-                                          fontFamily: 'Poppins-Medium',
-                                          fontSize: 15, color: Colors.white));
+                                return Text("Loading",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Medium',
+                                        fontSize: 15,
+                                        color: Colors.white));
                               },
                             ),
                           )),
@@ -401,16 +402,23 @@ class ListDetailState extends State<ListDetail> {
 
   double _leftPadding = 25;
   double _opacity = 0;
+  double  _height = 0;
 
-  _changePadding(){
+  _changePadding() {
     setState(() {
       _leftPadding = 12;
     });
   }
 
-    _changeOpacity(){
+  _changeOpacity() {
     setState(() {
       _opacity = 1;
+    });
+  }
+
+   _changeHeight() {
+    setState(() {
+      _height = 180;
     });
   }
 
@@ -422,11 +430,12 @@ class ListDetailState extends State<ListDetail> {
     _icon = Icons.error;
     _leftPadding = 25;
     _opacity = 0;
-    Timer(const Duration(milliseconds: 1500), () {
-    _changePadding();
-    _changeOpacity();
+    Timer(const Duration(milliseconds: 1000), () {
+      _changePadding();
+      _changeOpacity();
+            _changeHeight();
+
     });
-    
   }
 
   Future getTeamData() async {
@@ -468,28 +477,7 @@ class ListDetailState extends State<ListDetail> {
         });
   }
 
-  void _showFlagHelp() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("Incorrect Data"),
-            content: new Text(
-                "This data has been flagged as being potentially incorrect"),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text(
-                  "Close",
-                  style: TextStyle(color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
+
 
   Future getCompData() async {
     var response = await http.get(
@@ -509,11 +497,15 @@ class ListDetailState extends State<ListDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-            child: ListView(
+        child: ListView(
           children: [
-            Container(
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              height: _height,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(7),
+                      bottomRight: Radius.circular(7)),
                   color: Color.fromRGBO(233, 64, 87, 1),
                   boxShadow: [
                     BoxShadow(
@@ -584,59 +576,70 @@ class ListDetailState extends State<ListDetail> {
                       ],
                     ),
                     AnimatedPadding(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeInOutExpo,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOutExpo,
                       padding: EdgeInsets.fromLTRB(_leftPadding, 40, 0, 0),
                       child: FutureBuilder<dynamic>(
                         future: getTeamData(),
                         builder: (context, AsyncSnapshot<dynamic> snapshot) {
                           if (snapshot.hasData)
-                            return AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 500), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['nickname']}',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Bold',
-                                    fontSize: 20,
-                                    color: Colors.white)));
+                            return AnimatedOpacity(
+                                opacity: _opacity,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.easeInOutExpo,
+                                child: Text('${snapshot.data['nickname']}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 20,
+                                        color: Colors.white)));
                           return Text(" ");
                         },
                       ),
                     ),
                     AnimatedPadding(
-                          duration: Duration(milliseconds: 600),
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.easeInOutExpo,
+                      padding: EdgeInsets.fromLTRB(_leftPadding, 65, 0, 0),
+                      child: AnimatedOpacity(
+                          opacity: _opacity,
+                          duration: Duration(milliseconds: 550),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 65, 0, 0),
-                        child: AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 550), curve: Curves.easeInOutExpo, child: Text(
-                          "Team " + widget.text,
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white),
-                        )),
+                          child: Text(
+                            "Team " + widget.text,
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          )),
                     ),
                     AnimatedPadding(
                       duration: Duration(milliseconds: 600),
-                          curve: Curves.easeInOutExpo,
+                      curve: Curves.easeInOutExpo,
                       padding: EdgeInsets.only(left: _leftPadding, top: 90),
-                      child: GestureDetector(
-                        child: FutureBuilder<dynamic>(
-                          future: getValidity(),
-                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.hasData)
-                              return AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 600), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Bold',
-                                      fontSize: 15,
-                                      color: Colors.red)));
-                            return Text(" ");
-                          },
-                        ),
-                        onTap: () => _showFlagHelp(),
+                      child: FutureBuilder<dynamic>(
+                        future: getValidity(),
+                        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.hasData)
+                            return AnimatedOpacity(
+                                opacity: _opacity,
+                                duration: Duration(milliseconds: 600),
+                                curve: Curves.easeInOutExpo,
+                                child: Text('${snapshot.data}',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Bold',
+                                        fontSize: 15,
+                                        color: Colors.white)));
+                          return Text(" ");
+                        },
                       ),
                     ),
                     Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                              padding: EdgeInsets.only(
-                              bottom: 20, left: 12, right: 12, top: 100),
-                          child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: 20, left: 12, right: 12, top: 120),
+                          child: AnimatedOpacity(
+                                opacity: _opacity,
+                                duration: Duration(milliseconds: 600),
+                                curve: Curves.easeInOutExpo,
+                                child: Container(
                               height: 40,
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -646,41 +649,48 @@ class ListDetailState extends State<ListDetail> {
                               ),
                               child: GestureDetector(
                                 child: Center(
-                                  child: Text(
+                                  child: AnimatedOpacity(
+                                opacity: _opacity,
+                                duration: Duration(milliseconds: 600),
+                                curve: Curves.easeInOutExpo,
+                                child: Text(
                                     "Team Information",
                                     style: TextStyle(
                                         fontFamily: 'Poppins-Bold',
                                         fontSize: 15,
                                         color: Color.fromRGBO(233, 64, 87, 1)),
-                                  ),
+                                  )),
                                 ),
                                 onTap: () => showAsBottomSheet(),
-                              )),
+                              ))),
                         )),
                   ],
-                  
                 )),
-                Container(
-            height: 500,
-            child: Center(
-              child: SingleChildScrollView(
+            Container(
+              height: 500,
+              child: Center(
+                child: SingleChildScrollView(
                     child: Column(
                   children: <Widget>[
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 700),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 700),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 5, 0, 0),
-                        child: AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 650), curve: Curves.easeInOutExpo, child: Text("Competition",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 20))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 650),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Competition",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 20))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 750),
+                          duration: Duration(milliseconds: 750),
                           curve: Curves.easeInOutExpo,
                           padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
@@ -688,10 +698,15 @@ class ListDetailState extends State<ListDetail> {
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 700), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['competition']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 15)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 700),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['competition']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 15)));
                               return Text(" ");
                             },
                           ),
@@ -699,18 +714,22 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 800),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 750), curve: Curves.easeInOutExpo, child: Text("Robot Weight",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 750),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Weight",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 850),
+                          duration: Duration(milliseconds: 850),
                           curve: Curves.easeInOutExpo,
                           padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
@@ -718,10 +737,15 @@ class ListDetailState extends State<ListDetail> {
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 800), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['robot_weight']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 800),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_weight']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -729,61 +753,38 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 900),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 900),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 850), curve: Curves.easeInOutExpo, child: Text("Robot Frame Length",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 850),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Frame Length",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 950),
+                          duration: Duration(milliseconds: 950),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 900), curve: Curves.easeInOutExpo, child: Text(
-                                    '${snapshot.data['robot_frame_length']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
-                              return Text(" ");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child:AnimatedPadding(
-                      duration: Duration(milliseconds: 1000),
-                          curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 950), curve: Curves.easeInOutExpo, child: Text("Robot Frame Width",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1050),
-                          curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getData(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1000), curve: Curves.easeInOutExpo, child: Text(
-                                    '${snapshot.data['robot_frame_width']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 900),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_frame_length']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -791,30 +792,38 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1100),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1050), curve: Curves.easeInOutExpo, child: Text("Robot Drivetrain Type",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 950),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Frame Width",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1150),
+                          duration: Duration(milliseconds: 1050),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1100), curve: Curves.easeInOutExpo, child: Text(
-                                    '${snapshot.data['robot_drivetrain_type']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1000),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_frame_width']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -822,29 +831,38 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1200),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1100),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1150), curve: Curves.easeInOutExpo, child: Text("Robot Height",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1050),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Drivetrain Type",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1250),
+                          duration: Duration(milliseconds: 1150),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1200), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['robot_highlow']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1100),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_drivetrain_type']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -852,29 +870,38 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1300),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1200),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1250), curve: Curves.easeInOutExpo, child: Text("Robot Goal",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1150),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Height",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1350),
+                          duration: Duration(milliseconds: 1250),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1300), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['robot_goal']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1200),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_highlow']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -882,29 +909,76 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1400),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1300),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1350), curve: Curves.easeInOutExpo, child: Text("Robot CP Rotational Control",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1250),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Goal",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1450),
+                          duration: Duration(milliseconds: 1350),
                           curve: Curves.easeInOutExpo,
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getData(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1300),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_goal']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
+                              return Text(" ");
+                            },
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: AnimatedPadding(
+                        duration: Duration(milliseconds: 1400),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1350),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot CP Rotational Control",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: AnimatedPadding(
+                          duration: Duration(milliseconds: 1450),
+                          curve: Curves.easeInOutExpo,
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getRot(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1400), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1400),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -912,29 +986,37 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1500),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1500),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child: AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1450), curve: Curves.easeInOutExpo, child:  Text("Robot CP Positional Control",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1450),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot CP Positional Control",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1550),
+                          duration: Duration(milliseconds: 1550),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getPos(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1500), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1500),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -942,30 +1024,38 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1600),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1600),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1550), curve: Curves.easeInOutExpo, child: Text("Robot Vision Type",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1550),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Vision Type",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1650),
+                          duration: Duration(milliseconds: 1650),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1600), curve: Curves.easeInOutExpo, child: Text(
-                                    '${snapshot.data['robot_vision_type']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1600),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text(
+                                        '${snapshot.data['robot_vision_type']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -973,29 +1063,37 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1700),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1700),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1650), curve: Curves.easeInOutExpo, child: Text("Robot Implements Autonomous",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1650),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Implements Autonomous",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1750),
+                          duration: Duration(milliseconds: 1750),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getAuto(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1700), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1700),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -1003,29 +1101,37 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1800),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1800),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1750), curve: Curves.easeInOutExpo, child: Text("Robot Climbs",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1750),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Climbs",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1850),
+                          duration: Duration(milliseconds: 1850),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getClimb(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1800), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1800),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -1033,29 +1139,37 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1900),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 1900),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1850), curve: Curves.easeInOutExpo, child: Text("Robot Buddy Climb",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1850),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Buddy Climb",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 1950),
+                          duration: Duration(milliseconds: 1950),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getBuddy(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1900), curve: Curves.easeInOutExpo, child: Text('${snapshot.data}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1900),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -1063,29 +1177,37 @@ class ListDetailState extends State<ListDetail> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
-                      duration: Duration(milliseconds: 2000),
-                          curve: Curves.easeInOutExpo,
+                        duration: Duration(milliseconds: 2000),
+                        curve: Curves.easeInOutExpo,
                         padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child:  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 1950), curve: Curves.easeInOutExpo, child: Text("Notes",
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Bold', fontSize: 15))),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1950),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Notes",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
                       ),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
                         child: AnimatedPadding(
-                      duration: Duration(milliseconds: 2050),
+                          duration: Duration(milliseconds: 2050),
                           curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
                           child: FutureBuilder<dynamic>(
                             future: getData(),
                             builder:
                                 (context, AsyncSnapshot<dynamic> snapshot) {
                               if (snapshot.hasData)
-                                return  AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 2000), curve: Curves.easeInOutExpo, child: Text('${snapshot.data['notes']}',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins-Medium',
-                                        fontSize: 13)));
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 2000),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data['notes']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
                               return Text(" ");
                             },
                           ),
@@ -1097,12 +1219,9 @@ class ListDetailState extends State<ListDetail> {
                 )),
               ),
             ),
-          
           ],
         ),
-        
       ),
-       
     );
   }
 }
