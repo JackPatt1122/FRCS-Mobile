@@ -7,7 +7,6 @@ import 'package:random_string/random_string.dart';
 import 'pitdone.dart';
 import 'package:bloc_login/dao/user_dao.dart';
 import 'package:bloc_login/api_connection/profile_conection.dart';
-import 'package:bloc_login/profile/profile.dart';
 
 class PitScout extends StatefulWidget {
   @override
@@ -64,6 +63,12 @@ class _PitScoutState extends State<PitScout> {
   }
 
 
+    getProfileID() async {
+    var profile = await getProfileData();
+        print(profile);
+
+    return profile['user'];
+  }
   
   getTeamName(num) async {
     var response = await http.get(
@@ -120,31 +125,25 @@ class _PitScoutState extends State<PitScout> {
     });
   }
 
-  getProfile() async {
+  Future getUserData() async {
     var token = await UserDao().getToken(0);
-    var user = await getUserData();
+
     var response = await http.get(
-        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
+        Uri.encodeFull("http://192.168.86.37:8000/api/users/" + token),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token:' + token
         });
 
 
-    return Future.value(json.decode(response.body)['profile']);
+    return Future.value(json.decode(response.body)['username']);
   }
 
 
 
-
-  getProfileID() async {
-    var profile = await getProfile();
-    print(profile['user']);
-    return profile['user'];
-  }
-
-  getID(data){
-    return data;
+  getUser() async {
+    var user = await getUserData();
+    return user.toString();
   }
   
 
@@ -181,7 +180,7 @@ class _PitScoutState extends State<PitScout> {
         body: {
           "team_num": teamNumController.text.toString(),
           "competition": _comp,
-          "scout": getProfileID().toString(),
+          "scout": 1.toString(),
           "scouted_team_num": widget.text.toString(),
           "robot_weight": weightController.text,
           "robot_frame_length": lengthController.text.toString(),
@@ -366,7 +365,6 @@ class _PitScoutState extends State<PitScout> {
                       onChanged: (newVal) {
                         setState(() {
                           _comp = newVal;
-                          getProfileID();
                         });
                       },
                       value: _comp,

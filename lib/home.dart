@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
   final _pitStatsPage = PitList();
   final _matchStatsPage = MatchList();
 
-  Widget _showPage = Profile();
+  Widget _showPage = MatchList();
 
   Widget _pageChooser(int page) {
     switch (page) {
@@ -40,15 +40,42 @@ class _HomeState extends State<Home> {
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-    });
+    }); 
   }
 
   @override
   Widget build(BuildContext context) {
+
+    Color color = Theme.of(context).backgroundColor;
+
+      getColor() {
+    print(color);
+    return color;
+  }
+
+      invertIcon(){
+    if(getColor() == Colors.black){
+      return Colors.white;
+    }
+    else{
+      return Colors.black;
+    }
+  }
+
+        iconColor(){
+    if(getColor() == Colors.black){
+      return Colors.black;
+    }
+    else{
+      return Colors.white;
+    }
+  }
+
     return Scaffold(
         bottomNavigationBar: BottomNavigationDotBar(
-          activeColor: Colors.black,
-          color: Colors.black,
+          activeColor: iconColor(),
+          color: invertIcon(),
+          
           items: <BottomNavigationDotBarItem>[
             BottomNavigationDotBarItem(
                 icon: Icons.insert_chart,
@@ -65,7 +92,9 @@ class _HomeState extends State<Home> {
                   });
                 }),
             BottomNavigationDotBarItem(
+              
                 icon: Icons.account_circle,
+                
                 onTap: () {
                   setState(() {
                     _showPage = _pageChooser(2);

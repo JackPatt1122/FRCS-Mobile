@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_login/login/bloc/login_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc_login/forgotPass/forgotPass.dart';
-
+import 'register.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -16,6 +16,32 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    
+
+    Color color = Theme.of(context).backgroundColor;
+
+
+    
+    getColor() {
+      print(color);
+      return color;
+    }
+  invertBackground() {
+      if (getColor() == Colors.black) {
+        return Color.fromRGBO(241, 243, 246, 1);
+      } else {
+        return Color.fromRGBO(45, 45, 45, 1);
+      }
+    }
+
+        invertShadow() {
+      if (getColor() == Colors.black) {
+        return Color.fromRGBO(0, 0, 0, .25);
+      } else {
+        return Color.fromRGBO(50, 50, 50, 1);
+      }
+    }
+
     _onLoginButtonPressed() {
       BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
         username: _usernameController.text,
@@ -35,7 +61,6 @@ class _LoginFormState extends State<LoginForm> {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.only(left: 16,right: 16),
@@ -43,13 +68,27 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+             
               Column(
+                 
                 crossAxisAlignment: CrossAxisAlignment.start,
+                
                 children: <Widget>[
-                  SizedBox(height: 50,),
-                  Text("Welcome Back,",style: TextStyle(fontSize: 26,),),
-                  SizedBox(height: 6,),
-                  Text("Sign in!",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  Center(child:  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Container(
+                height: 70,
+                width: 70,
+                decoration: BoxDecoration(color: invertBackground(), borderRadius: BorderRadius.all(Radius.circular(15)), boxShadow: [
+                  BoxShadow(color: invertShadow(), offset: Offset(30, 30), blurRadius: 60)
+                ]),
+              child: Padding(padding: EdgeInsets.all(10), child: Image.asset('assets/icon.png',))),
+                  ), ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Text("Welcome Back",style: TextStyle(fontSize: 26, fontFamily: 'Poppins-Light', ),),
+                  ),
+                  Text("Sign in",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
                 ],
               ),
               Column(
@@ -58,18 +97,7 @@ class _LoginFormState extends State<LoginForm> {
                     decoration: InputDecoration(
                       labelText: "Username",
                       labelStyle: TextStyle(fontSize: 14,color: Colors.grey.shade400),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                          )
-                      ),
+                      
                     ),
                     controller: _usernameController,
 
@@ -79,18 +107,6 @@ class _LoginFormState extends State<LoginForm> {
                     decoration: InputDecoration(
                       labelText: "Password",
                       labelStyle: TextStyle(fontSize: 14,color: Colors.grey.shade400),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                          )
-                      ),
                     ),
                     controller: _passwordController,
 
@@ -127,6 +143,7 @@ class _LoginFormState extends State<LoginForm> {
                           
                           gradient: LinearGradient(
                             
+                            
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
@@ -147,8 +164,15 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16,),
-                  SizedBox(height: 30,),
+                                    SizedBox(height: 10,),
+
+                  GestureDetector(onTap: () => Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Register(),
+                                                        )), child: Text("Register",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red),)),
+                  SizedBox(height: 46,),
                 ],
               ),
               

@@ -42,12 +42,7 @@ class ListDetailState extends State<ListDetail> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.grey),
                           )),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
-                            child: Text("Team Information")),
-                      ),
+                      
                       Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
@@ -340,6 +335,10 @@ class ListDetailState extends State<ListDetail> {
     return Future.value(json.decode(response.body)['robot_control_panel_rot']);
   }
 
+
+  
+  
+
   Future getValidity() async {
     var data = await getEntryValidity();
     if (data == true) {
@@ -348,6 +347,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == false) {
       return " ";
     }
+    return data;
   }
 
   Future getAuto() async {
@@ -358,6 +358,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == "100") {
       return "Yes";
     }
+    return data;
   }
 
   Future getClimb() async {
@@ -368,6 +369,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == "100") {
       return "Yes";
     }
+    return data;
   }
 
   Future getBuddy() async {
@@ -378,6 +380,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == "100") {
       return "Yes";
     }
+    return data;
   }
 
   Future getRot() async {
@@ -388,6 +391,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == "100") {
       return "Yes";
     }
+    return data;
   }
 
   Future getPos() async {
@@ -398,6 +402,7 @@ class ListDetailState extends State<ListDetail> {
     if (data == "100") {
       return "Yes";
     }
+    return data;
   }
 
   double _leftPadding = 25;
@@ -495,8 +500,25 @@ class ListDetailState extends State<ListDetail> {
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).backgroundColor;
+
+          getColor() {
+    print(color);
+    return color;
+  }
+
+
+        iconColor(){
+    if(getColor() == Colors.black){
+      return Colors.white;
+    }
+    else{
+      return Colors.black;
+    }
+  }
+
     return Scaffold(
-      body: Container(
+      body:  SafeArea(child: Container(
         child: ListView(
           children: [
             AnimatedContainer(
@@ -537,7 +559,7 @@ class ListDetailState extends State<ListDetail> {
                               ),
                               child: Center(
                                 child: Center(
-                                  child: Icon(Icons.arrow_back),
+                                  child: Icon(Icons.arrow_back, color: iconColor(),),
                                 ),
                               ),
                             ),
@@ -667,7 +689,7 @@ class ListDetailState extends State<ListDetail> {
                   ],
                 )),
             Container(
-              height: 500,
+              height: 700,
               child: Center(
                 child: SingleChildScrollView(
                     child: Column(
@@ -1021,6 +1043,44 @@ class ListDetailState extends State<ListDetail> {
                             },
                           ),
                         )),
+                         Align(
+                      alignment: Alignment.topLeft,
+                      child: AnimatedPadding(
+                        duration: Duration(milliseconds: 1700),
+                        curve: Curves.easeInOutExpo,
+                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                        child: AnimatedOpacity(
+                            opacity: _opacity,
+                            duration: Duration(milliseconds: 1650),
+                            curve: Curves.easeInOutExpo,
+                            child: Text("Robot Implements Autonomous",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: AnimatedPadding(
+                          duration: Duration(milliseconds: 1750),
+                          curve: Curves.easeInOutExpo,
+                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
+                          child: FutureBuilder<dynamic>(
+                            future: getAuto(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData)
+                                return AnimatedOpacity(
+                                    opacity: _opacity,
+                                    duration: Duration(milliseconds: 1700),
+                                    curve: Curves.easeInOutExpo,
+                                    child: Text('${snapshot.data}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 13)));
+                              return Text(" ");
+                            },
+                          ),
+                        )),
                     Align(
                       alignment: Alignment.topLeft,
                       child: AnimatedPadding(
@@ -1053,44 +1113,6 @@ class ListDetailState extends State<ListDetail> {
                                     curve: Curves.easeInOutExpo,
                                     child: Text(
                                         '${snapshot.data['robot_vision_type']}',
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins-Medium',
-                                            fontSize: 13)));
-                              return Text(" ");
-                            },
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: AnimatedPadding(
-                        duration: Duration(milliseconds: 1700),
-                        curve: Curves.easeInOutExpo,
-                        padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                        child: AnimatedOpacity(
-                            opacity: _opacity,
-                            duration: Duration(milliseconds: 1650),
-                            curve: Curves.easeInOutExpo,
-                            child: Text("Robot Implements Autonomous",
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Bold', fontSize: 15))),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: AnimatedPadding(
-                          duration: Duration(milliseconds: 1750),
-                          curve: Curves.easeInOutExpo,
-                          padding: EdgeInsets.fromLTRB(_leftPadding, 0, 0, 0),
-                          child: FutureBuilder<dynamic>(
-                            future: getAuto(),
-                            builder:
-                                (context, AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasData)
-                                return AnimatedOpacity(
-                                    opacity: _opacity,
-                                    duration: Duration(milliseconds: 1700),
-                                    curve: Curves.easeInOutExpo,
-                                    child: Text('${snapshot.data}',
                                         style: TextStyle(
                                             fontFamily: 'Poppins-Medium',
                                             fontSize: 13)));
@@ -1213,7 +1235,7 @@ class ListDetailState extends State<ListDetail> {
                           ),
                         )),
                     SizedBox(
-                      height: 150,
+                      height: 200,
                     ),
                   ],
                 )),
@@ -1221,6 +1243,7 @@ class ListDetailState extends State<ListDetail> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
