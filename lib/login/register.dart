@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
+import 'RegisterSuccess.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -30,9 +31,17 @@ class _RegisterState extends State<Register> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+
+
   _changePadding() {
     setState(() {
       _topPadding = 40;
+    });
+  }
+
+    _changePadding2() {
+    setState(() {
+      _topPadding = 0;
     });
   }
 
@@ -72,19 +81,23 @@ class _RegisterState extends State<Register> {
     });
   }
 
+  _changeAlign2() {
+    setState(() {
+      _alignment = Alignment.center;
+    });
+  }
+
   _changeSize2() {
     setState(() {
       _size = 100;
     });
   }
 
-  _changeOtherOpacity(){
-     setState(() {
+  _changeOtherOpacity() {
+    setState(() {
       _opacity = 1;
     });
   }
-
-
 
   @override
   void initState() {
@@ -106,56 +119,42 @@ class _RegisterState extends State<Register> {
           _changeTextPadding();
           _changeTextOpacity();
           Timer(const Duration(milliseconds: 1000), () {
-          _changeOtherOpacity();
-        });
+            _changeOtherOpacity();
+          });
         });
       });
     });
   }
 
-    bool isChecked = false;
+  bool isChecked = false;
 
- void toggleCheckbox(bool value) {
-
-      if(isChecked == false)
-      {
-        // Put your code here which you want to execute on CheckBox Checked event.
-        setState(() {
-          isChecked = true;
-        });
-
-      }
-      else
-      {
-        // Put your code here which you want to execute on CheckBox Un-Checked event.
-        setState(() {
-          isChecked = false;
-        });
-      }
+  void toggleCheckbox(bool value) {
+    if (isChecked == false) {
+      // Put your code here which you want to execute on CheckBox Checked event.
+      setState(() {
+        isChecked = true;
+      });
+    } else {
+      // Put your code here which you want to execute on CheckBox Un-Checked event.
+      setState(() {
+        isChecked = false;
+      });
+    }
   }
 
-sendRegistrationData() {
-     http.post(
-      
-
-        Uri.encodeFull("http://192.168.86.37:8000/api/createuser/"),
+  sendRegistrationData() {
+    http.post(Uri.encodeFull("http://192.168.86.37:8000/api/createuser/"),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Token: 993926b321141ee095220489d811b381b3df63b6',
-          
         },
         body: {
-           
           "email": "test@test.com",
           "password": "password12",
           "team_num": "810",
           "username": "test123456",
-        }
-        );
-
+        });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -210,21 +209,24 @@ sendRegistrationData() {
                         child: AnimatedOpacity(
                           opacity: _textOpacity,
                           duration: Duration(milliseconds: 300),
-                          child: Text(
-                            "Welcome To FRCS",
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontFamily: 'Poppins-Light',
-                              color: Colors.black,
+
+                            
+                              
+                              child: Text(
+                                "Welcome To FRCS",
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontFamily: 'Poppins-Light',
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                  
                       AnimatedPadding(
                           curve: Curves.easeInOutExpo,
                           duration: Duration(milliseconds: 600),
-                          padding:
-                              EdgeInsets.only(left: _leftPadding),
+                          padding: EdgeInsets.only(left: _leftPadding),
                           child: AnimatedOpacity(
                             opacity: _textOpacity,
                             duration: Duration(milliseconds: 500),
@@ -239,118 +241,137 @@ sendRegistrationData() {
                           )),
                     ],
                   ),
-                  Padding(padding: EdgeInsets.only(left: 16, right: 16), child: AnimatedOpacity(opacity: _opacity, duration: Duration(milliseconds: 500), child:
-                  Column(
-                    children: <Widget>[
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade400),
-                        ),
-                        controller: emailController,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                       TextField(
-                        decoration: InputDecoration(
-                          labelText: "Username",
-                          labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade400),
-                        ),
-                        controller: usernameController,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade400),
-                        ),
-                        controller: passwordController,
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: "Team Number",
-                          labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade400),
-                        ),
-                        controller: teamNumberController,
-                      ),
-                     
-                      
-                     
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Align(alignment: Alignment.centerLeft, child: Row(children: <Widget>[
-                       Checkbox(
-                value: isChecked,
-                
-                onChanged: (value){toggleCheckbox(value);},
-                activeColor: Colors.pink,
-                checkColor: Colors.white,
-                
-                hoverColor: Colors.red,
-                tristate: false,
-              ),
-              Text("Team Admin?", style: TextStyle(color: Colors.black),)
-                      ]),
-                    
-                      ),
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        child: FlatButton(
-                          onPressed: () => sendRegistrationData(),
-                          padding: EdgeInsets.all(0),
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  Color(0xff8A2387),
-                                  Color(0xffE94057),
-                                  Color(0xffF27121),
-                                ],
-                              ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: AnimatedOpacity(
+                      opacity: _opacity,
+                      duration: Duration(milliseconds: 500),
+                      child: Column(
+                        children: <Widget>[
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade400),
                             ),
-                            
-                            child: Container(
-                              alignment: Alignment.center,
-                              constraints: BoxConstraints(
-                                  maxWidth: double.infinity, minHeight: 50),
-                              child: Text(
-                                "Register",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                            controller: emailController,
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Username",
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade400),
+                            ),
+                            controller: usernameController,
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Password",
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade400),
+                            ),
+                            controller: passwordController,
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Team Number",
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade400),
+                            ),
+                            controller: teamNumberController,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Checkbox(
+                                value: isChecked,
+                                onChanged: (value) {
+                                  toggleCheckbox(value);
+                                },
+                                activeColor: Colors.pink,
+                                checkColor: Colors.white,
+                                hoverColor: Colors.red,
+                                tristate: false,
+                              ),
+                              Text(
+                                "Team Admin?",
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ]),
+                          ),
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            child: FlatButton(
+                              onPressed: () {
+                                Timer(const Duration(milliseconds: 100), () {
+                                  _changeAlign2();
+                                  _changePadding2();
+                                   Timer(const Duration(milliseconds: 2000), () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child:
+                                            RegisterComplete(text: usernameController.text)));
+
+                                   });
+                                });
+                                
+
+                                //sendRegistrationData();
+                              },
+                              padding: EdgeInsets.all(0),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: [
+                                      Color(0xff8A2387),
+                                      Color(0xffE94057),
+                                      Color(0xffF27121),
+                                    ],
+                                  ),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  constraints: BoxConstraints(
+                                      maxWidth: double.infinity, minHeight: 50),
+                                  child: Text(
+                                    "Register",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
                               ),
                             ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                          SizedBox(
+                            height: 12,
                           ),
-                          
-                        ),
+                        ],
                       ),
-                       SizedBox(
-                        height: 12,
-                      ),
-                    ],
+                    ),
                   ),
-                  ),
-                  ),
-                  
                 ],
               ),
             ),
