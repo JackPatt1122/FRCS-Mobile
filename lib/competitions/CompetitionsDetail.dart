@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'TeamsList.dart';
+import 'LocationData.dart';
 
 
 class CompetitionsDetail extends StatefulWidget {
@@ -15,7 +16,9 @@ class CompetitionsDetail extends StatefulWidget {
 
 class _CompetitionsDetailState extends State<CompetitionsDetail> {
 
+  
 
+  String location;
 
   Future getCompName() async {
     var response = await http.get(
@@ -44,6 +47,22 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
         });
 
     return Future.value(json.decode(response.body));
+  }
+
+
+  Future getEventCode() async {
+    var response = await http.get(
+        Uri.encodeFull(
+            "https://www.thebluealliance.com/api/v3/event/2020nyli2"),
+        headers: {
+          "Accept": "application/json",
+          "X-TBA-Auth-Key":
+              "PzOW8s1DYGlVkgAsikwVlhy5wZ5Tm85fKSjd0DfiUJFQOGhsReyZEf88EEoAU1Cw"
+        });
+
+    setState(() {
+      location = json.decode(response.body)['event_code'];
+    });
   }
 
   Future getCompStartDate() async {
@@ -151,18 +170,50 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
   }
   @override
   void initState() {
-
+    getEventCode();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-        body: Column(children: <Widget>[
+        body: SafeArea(child: Column(children: <Widget>[
+          Align(alignment: Alignment.topLeft, child:
+           Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+          child: GestureDetector(
+            child: Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: const Color(0x29000000),
+                      offset: Offset(0, 0),
+                      blurRadius: 40)
+                ],
+              ),
+              child: Center(
+                child: Center(
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            onTap: () => Navigator.of(context).pop(),
+          ),
+           ),
+        ),
           Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: 50),
+                padding: EdgeInsets.only(top: 10),
                 child: FutureBuilder<dynamic>(
                   future: getCompName(),
                   builder: (context, AsyncSnapshot<dynamic> snapshot) {
@@ -323,10 +374,15 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
                                 builder:
                                     (context, AsyncSnapshot<dynamic> snapshot) {
                                   if (snapshot.hasData)
-                                    return Text('${snapshot.data['city']}',
+                                    return GestureDetector( onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CompetitionLocation(location: '${snapshot.data['city']}', place: widget.text),
+                                          )), child: Text('${snapshot.data['city']}',
                                         style: TextStyle(
                                             fontFamily: 'Poppins-SemiBold',
-                                            fontSize: 20));
+                                            fontSize: 20)));
                                   return Text("Loading",
                                       style: TextStyle(
                                           fontFamily: 'Poppins-SemiBold',
@@ -334,8 +390,10 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
                                           color: Colors.black));
                                 },
                               ),
+                             
+                              ),
                             ),
-                            ),
+                            
                             FutureBuilder<dynamic>(
                   future: getCompName(),
                   builder: (context, AsyncSnapshot<dynamic> snapshot) {
@@ -401,6 +459,7 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
           ),
           
         ]),
+      ),
       ),
     );
   }
