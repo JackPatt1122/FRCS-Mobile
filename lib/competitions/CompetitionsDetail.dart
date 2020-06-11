@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
+import 'TeamsList.dart';
+
 
 class CompetitionsDetail extends StatefulWidget {
   @override
@@ -13,7 +14,8 @@ class CompetitionsDetail extends StatefulWidget {
 }
 
 class _CompetitionsDetailState extends State<CompetitionsDetail> {
-  List data;
+
+
 
   Future getCompName() async {
     var response = await http.get(
@@ -28,7 +30,23 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
     return Future.value(json.decode(response.body));
   }
 
-    Future getCompStartDate() async {
+
+
+
+  Future getTeamsAmount() async {
+    var response = await http.get(
+        Uri.encodeFull(
+            "https://www.thebluealliance.com/api/v3/event/2020nyli2/teams"),
+        headers: {
+          "Accept": "application/json",
+          "X-TBA-Auth-Key":
+              "PzOW8s1DYGlVkgAsikwVlhy5wZ5Tm85fKSjd0DfiUJFQOGhsReyZEf88EEoAU1Cw"
+        });
+
+    return Future.value(json.decode(response.body));
+  }
+
+  Future getCompStartDate() async {
     var response = await http.get(
         Uri.encodeFull(
             "https://www.thebluealliance.com/api/v3/event/2019nyli2"),
@@ -37,49 +55,47 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
           "X-TBA-Auth-Key":
               "PzOW8s1DYGlVkgAsikwVlhy5wZ5Tm85fKSjd0DfiUJFQOGhsReyZEf88EEoAU1Cw"
         });
-        var inputString = json.decode(response.body)['start_date'];
-        var date = DateTime.parse(inputString);
+    var inputString = json.decode(response.body)['start_date'];
+    var date = DateTime.parse(inputString);
 
-        switch(date.month){
-          case 1:
-          return("January" + ' ' + date.day.toString() + ' ');
-            break;
-          case 2: 
-          return("February" + ' ' + date.day.toString() + ' ');
-            break;
-          case 3:
-          return("March" + ' ' + date.day.toString() + ' ');
-            break;
-          case 4:
-          return("April" + ' ' + date.day.toString() + ' ');
-            break;
-          case 5:
-          return("May" + ' ' + date.day.toString() + ' ');
-            break;
-          case 6:
-          return("June" + ' ' + date.day.toString() + ' ');
-            break;
-          case 7:
-          return("July" + ' ' + date.day.toString() + ' ');
-            break;
-          case 8:
-          return("August" + ' ' + date.day.toString() + ' ');
-            break;
-          case 9:
-          return("September" + ' ' + date.day.toString() + ' ');
-            break;
-          case 10:
-          return("October" + date.day.toString() + ' ');
-            break;
-          case 11:
-          return("November" + ' ' + date.day.toString() + ' ');
-            break;
-          case 12:
-          return("Dcember" + ' ' + date.day.toString() + ' ');
-            break;
-
-        }
-  
+    switch (date.month) {
+      case 1:
+        return ("January" + ' ' + date.day.toString() + ' ');
+        break;
+      case 2:
+        return ("February" + ' ' + date.day.toString() + ' ');
+        break;
+      case 3:
+        return ("March" + ' ' + date.day.toString() + ' ');
+        break;
+      case 4:
+        return ("April" + ' ' + date.day.toString() + ' ');
+        break;
+      case 5:
+        return ("May" + ' ' + date.day.toString() + ' ');
+        break;
+      case 6:
+        return ("June" + ' ' + date.day.toString() + ' ');
+        break;
+      case 7:
+        return ("July" + ' ' + date.day.toString() + ' ');
+        break;
+      case 8:
+        return ("August" + ' ' + date.day.toString() + ' ');
+        break;
+      case 9:
+        return ("September" + ' ' + date.day.toString() + ' ');
+        break;
+      case 10:
+        return ("October" + date.day.toString() + ' ');
+        break;
+      case 11:
+        return ("November" + ' ' + date.day.toString() + ' ');
+        break;
+      case 12:
+        return ("Dcember" + ' ' + date.day.toString() + ' ');
+        break;
+    }
   }
 
   Future getCompEndDate() async {
@@ -91,60 +107,52 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
           "X-TBA-Auth-Key":
               "PzOW8s1DYGlVkgAsikwVlhy5wZ5Tm85fKSjd0DfiUJFQOGhsReyZEf88EEoAU1Cw"
         });
-        var inputString = json.decode(response.body)['end_date'];
-        var date = DateTime.parse(inputString);
+    var inputString = json.decode(response.body)['end_date'];
+    var date = DateTime.parse(inputString);
 
-        switch(date.month){
-          case 1:
-          return(" January" + ' ' + date.day.toString());
-            break;
-          case 2: 
-          return(" February" + ' ' + date.day.toString());
-            break;
-          case 3:
-          return(" March" + ' ' + date.day.toString());
-            break;
-          case 4:
-          return(" April" + ' ' + date.day.toString());
-            break;
-          case 5:
-          return(" May" + ' ' + date.day.toString());
-            break;
-          case 6:
-          return(" June" + ' ' + date.day.toString());
-            break;
-          case 7:
-          return(" July" + ' ' + date.day.toString());
-            break;
-          case 8:
-          return(" August" + ' ' + date.day.toString());
-            break;
-          case 9:
-          return(" September" + ' ' + date.day.toString());
-            break;
-          case 10:
-          return(" October" + date.day.toString());
-            break;
-          case 11:
-          return(" November" + ' ' + date.day.toString());
-            break;
-          case 12:
-          return(" Dcember" + ' ' + date.day.toString());
-            break;
-
-        }
-  
+    switch (date.month) {
+      case 1:
+        return (" January" + ' ' + date.day.toString());
+        break;
+      case 2:
+        return (" February" + ' ' + date.day.toString());
+        break;
+      case 3:
+        return (" March" + ' ' + date.day.toString());
+        break;
+      case 4:
+        return (" April" + ' ' + date.day.toString());
+        break;
+      case 5:
+        return (" May" + ' ' + date.day.toString());
+        break;
+      case 6:
+        return (" June" + ' ' + date.day.toString());
+        break;
+      case 7:
+        return (" July" + ' ' + date.day.toString());
+        break;
+      case 8:
+        return (" August" + ' ' + date.day.toString());
+        break;
+      case 9:
+        return (" September" + ' ' + date.day.toString());
+        break;
+      case 10:
+        return (" October" + date.day.toString());
+        break;
+      case 11:
+        return (" November" + ' ' + date.day.toString());
+        break;
+      case 12:
+        return (" Dcember" + ' ' + date.day.toString());
+        break;
+    }
   }
+  @override
+  void initState() {
 
-
-
-
-  Future _parseDateStr() async {
-    var inputString = await getCompStartDate();
-  DateFormat format = DateFormat.yMMMMd();
-  print(format.parse(inputString));
-  return Future.value(format.parse(inputString));
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +209,7 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(30),
                           topLeft: Radius.circular(30)),
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                     height: double.infinity,
                   ),
@@ -209,105 +217,189 @@ class _CompetitionsDetailState extends State<CompetitionsDetail> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 50, top: 20),
+                    padding: EdgeInsets.only(right: 25, top: 20),
                     child: Container(
-                      width: 80,
-                      height: 80,
+                      width: 70,
+                      height: 70,
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(0),
                         child: Container(
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: const Color(0xFF78FEA4),
-                                    offset: Offset(0, 10),
-                                    blurRadius: 30)
-                              ],
-                              color: Color(0xFF38FF7A),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          child: 
-                            Icon(Icons.check)
-                          ),
-                        ),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color(0xFF78FEA4),
+                                      offset: Offset(0, 10),
+                                      blurRadius: 30)
+                                ],
+                                color: Color(0xFF38FF7A),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            child: Icon(Icons.check, color: Colors.white, size: 50,)),
                       ),
                     ),
                   ),
+                ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(25, 120, 25, 0),
-                  child: Column(
+                  padding: const EdgeInsets.fromLTRB(25, 110, 25, 0),
+                  child: Stack(
                     children: <Widget>[
                       Container(
-                        height: 80,
+                        height: 70,
                         width: double.infinity,
                         decoration: BoxDecoration(
+                           boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, .2),
+                                      offset: Offset(30, 30),
+                                      blurRadius: 60)
+                                ],
                             color: Colors.white,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
-                                child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[ FutureBuilder<dynamic>(
-              future: getCompStartDate(),
-              builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData)
-                  return Text('${snapshot.data}',
-                      style: TextStyle(
-                          fontFamily: 'Poppins-SemiBold', fontSize: 25));
-                return Text("Loading",
-                    style: TextStyle(
-                        fontFamily: 'Poppins-SemiBold',
-                        fontSize: 25,
-                        color: Colors.black));
-              },
-            ),
-            Image.asset('assets/icons/arrow-right.png', height: 20, width: 20),
-            FutureBuilder<dynamic>(
-              future: getCompEndDate(),
-              builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData)
-                  return Text('${snapshot.data}',
-                      style: TextStyle(
-                          fontFamily: 'Poppins-SemiBold', fontSize: 25));
-                return Text("Loading",
-                    style: TextStyle(
-                        fontFamily: 'Poppins-SemiBold',
-                        fontSize: 25,
-                        color: Colors.black));
-              },
-            ),
-                                
-                                ]),
+                        child: Center(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                FutureBuilder<dynamic>(
+                                  future: getCompStartDate(),
+                                  builder: (context,
+                                      AsyncSnapshot<dynamic> snapshot) {
+                                    if (snapshot.hasData)
+                                      return Text('${snapshot.data}',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins-SemiBold',
+                                              fontSize: 25));
+                                    return Text("Loading",
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-SemiBold',
+                                            fontSize: 25,
+                                            color: Colors.black));
+                                  },
                                 ),
+                                Image.asset('assets/icons/arrow-right.png',
+                                    height: 20, width: 20),
+                                FutureBuilder<dynamic>(
+                                  future: getCompEndDate(),
+                                  builder: (context,
+                                      AsyncSnapshot<dynamic> snapshot) {
+                                    if (snapshot.hasData)
+                                      return Text('${snapshot.data}',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins-SemiBold',
+                                              fontSize: 25));
+                                    return Text("Loading",
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-SemiBold',
+                                            fontSize: 25,
+                                            color: Colors.black));
+                                  },
+                                ),
+                              ]),
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                         
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),),
-                                  Container(
-                          height: 80,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),),
-                        ],
-                  
+                        padding: const EdgeInsets.only(top: 90),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              height: 70,
+                              width: 145,
+                              decoration: BoxDecoration(
+                                 boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, .2),
+                                      offset: Offset(30, 30),
+                                      blurRadius: 60)
+                                ],
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Center(child: FutureBuilder<dynamic>(
+                                future: getCompName(),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data['city']}',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-SemiBold',
+                                            fontSize: 20));
+                                  return Text("Loading",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-SemiBold',
+                                          fontSize: 20,
+                                          color: Colors.black));
+                                },
+                              ),
+                            ),
+                            ),
+                            FutureBuilder<dynamic>(
+                  future: getCompName(),
+                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData)
+                      return GestureDetector(onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CompetitionTeamList(
+                                              text:
+                                                  '${snapshot.data['event_code']}'.toString(),
+                                            ),
+                                          )), child: Container(
+                              height: 70,
+                              width: 145,
+                              decoration: BoxDecoration(
+                                 boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, .2),
+                                      offset: Offset(30, 30),
+                                      blurRadius: 60)
+                                ],
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                                      child: Center(child: FutureBuilder<dynamic>(
+                                future: getTeamsAmount(),
+                                builder:
+                                    (context, AsyncSnapshot<dynamic> snapshot) {
+                                  if (snapshot.hasData)
+                                    return Text('${snapshot.data.length}' + " Teams",
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins-SemiBold',
+                                            fontSize: 20));
+                                  return Text("Loading",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-SemiBold',
+                                          fontSize: 20,
+                                          color: Colors.black));
+                                },
+                              ),
+                            ),
+                            ),);
+                    return null;
+                  },
+                ),
+                            
+                            
+                            
+                            
+                          ],
                         ),
-                      )
+                      ),
+                       
+                      
                     ],
                   ),
+                  
                 ),
+                
               ],
             ),
-          )
+          ),
+          
         ]),
       ),
     );
