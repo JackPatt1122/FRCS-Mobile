@@ -11,6 +11,7 @@ import 'package:bloc_login/api_connection/profile_conection.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 
 class PitList extends StatefulWidget {
   @override
@@ -139,8 +140,6 @@ class HomePageState extends State {
       _changeOpacity();
     });
   }
-
-
 
   CancelSearchState() {
     setState(() {
@@ -410,9 +409,13 @@ class HomePageState extends State {
                                                         .toString();
                                                     Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ListDetail(
+                                                        PageTransition(
+                                                          type:
+                                                              PageTransitionType
+                                                                  .rightToLeft,
+                                                          curve: Curves
+                                                              .easeInOutExpo,
+                                                          child: ListDetail(
                                                             text: selectedItem,
                                                           ),
                                                         ));

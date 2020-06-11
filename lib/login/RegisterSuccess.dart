@@ -21,6 +21,7 @@ class _RegisterCompleteState extends State<RegisterComplete> {
   double _opacity = 1;
   bool isTrue = false;
   Timer timer;
+  double _containerOpacity = 1;
 
   BorderRadiusGeometry _borderRadius = BorderRadius.circular(20);
 
@@ -31,6 +32,7 @@ class _RegisterCompleteState extends State<RegisterComplete> {
     _opacity = 1;
     isTrue = false;
     _borderRadius = BorderRadius.circular(20);
+    _containerOpacity = 1;
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) => getTeamData());
   }
 
@@ -57,6 +59,19 @@ class _RegisterCompleteState extends State<RegisterComplete> {
     });
   }
 
+  changeContainerOpacityFinal() {
+    setState(() {
+      _containerOpacity = 0;
+    });
+  }
+
+
+  changeContainerSizeFinal() {
+    setState(() {
+      _size = 0;
+    });
+  }
+
   animationSequence() {
     Timer(const Duration(milliseconds: 10), () {
       changeSizeBigger();
@@ -64,6 +79,10 @@ class _RegisterCompleteState extends State<RegisterComplete> {
         changeSizeSmaller();
         Timer(const Duration(milliseconds: 1000), () {
           changeSizeBigger2();
+          Timer(const Duration(milliseconds: 1000), () {
+            changeContainerOpacityFinal();
+            changeContainerSizeFinal();
+          });
         });
       });
     });
@@ -80,15 +99,14 @@ class _RegisterCompleteState extends State<RegisterComplete> {
       setState(() {
         isTrue = true;
       });
-                                         Timer(const Duration(milliseconds: 2500), () {
-
-      Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            child: VerifyComplete(),
-          ));
-                                         });
+      Timer(const Duration(milliseconds: 2500), () {
+        Navigator.push(
+            context,
+            PageTransition(
+              type: PageTransitionType.fade,
+              child: VerifyComplete(),
+            ));
+      });
     }
   }
 
@@ -105,11 +123,42 @@ class _RegisterCompleteState extends State<RegisterComplete> {
       backgroundColor: Color(0xFFF1F3F6),
       body: Stack(
         children: <Widget>[
+          Positioned(
+            top: 30,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+              child: GestureDetector(
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: const Color(0x29000000),
+                          offset: Offset(0, 0),
+                          blurRadius: 40)
+                    ],
+                  ),
+                  child: Center(
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.topCenter,
             child: AnimatedPadding(
               duration: Duration(milliseconds: 500),
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 80),
               child: Text(
                 "Your account has been created",
                 style: TextStyle(
@@ -122,7 +171,7 @@ class _RegisterCompleteState extends State<RegisterComplete> {
           ),
           Align(
             alignment: Alignment.center,
-            child: AnimatedContainer(
+            child:AnimatedOpacity(duration: Duration(milliseconds: 200), opacity: _containerOpacity, child:  AnimatedContainer(
                 curve: Curves.easeInOutExpo,
                 duration: Duration(
                   milliseconds: 1000,
@@ -143,6 +192,7 @@ class _RegisterCompleteState extends State<RegisterComplete> {
                       offset: Offset(30, 30),
                       blurRadius: 60)
                 ], color: Color(0xFFF1F3F6), borderRadius: _borderRadius)),
+          ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 30.0),

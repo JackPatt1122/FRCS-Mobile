@@ -725,7 +725,7 @@ class ListDetailState extends State<ListDetail> {
                                     duration: Duration(milliseconds: 700),
                                     curve: Curves.easeInOutExpo,
                                     child: Text(
-                                        '${snapshot.data['competition']}',
+                                        '${snapshot.data['competition']}'.replaceAll('***SUSPENDED***', ''),
                                         style: TextStyle(
                                             fontFamily: 'Poppins-Medium',
                                             fontSize: 15)));

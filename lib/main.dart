@@ -95,7 +95,7 @@ final lightTheme = ThemeData(
     
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: darkTheme,
+      theme: lightTheme,
       
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {

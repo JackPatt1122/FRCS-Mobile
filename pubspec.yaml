@@ -41,8 +41,7 @@ dependencies:
   flutter_staggered_animations: "^0.1.2"
   dynamic_theme: ^1.0.0
   page_transition: "^1.1.5"
-
-
+  intl: ^0.16.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -71,13 +70,15 @@ flutter:
     - resources/images/waves.png
     - resources/images/icon-email.png
     - resources/images/icon-password.png
-    - assets/LBS icon.png
-    - assets/Frcs Splash-1.gif
+    - assets/icons/arrow-right.png
+
 
   fonts:
     - family: Poppins-Bold
       fonts:
         - asset: assets/Poppins-Bold.ttf
+
+    
         
     - family: Poppins-SemiBold
       fonts:

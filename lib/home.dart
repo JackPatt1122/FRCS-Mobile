@@ -3,6 +3,7 @@ import 'package:bloc_login/profile/profile.dart';
 import 'package:bloc_login/data/PitList.dart';
 import 'package:bloc_login/data/MatchList.dart';
 import 'package:navigation_dot_bar/navigation_dot_bar.dart';
+import 'package:bloc_login/competitions/CompetitionsList.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -20,18 +21,22 @@ class _HomeState extends State<Home> {
   final _profilePage = Profile();
   final _pitStatsPage = PitList();
   final _matchStatsPage = MatchList();
+  final _competitionsPage = CompetitionsList();
 
   Widget _showPage = MatchList();
 
   Widget _pageChooser(int page) {
     switch (page) {
       case 0:
-        return _matchStatsPage;
+        return _competitionsPage;
         break;
       case 1:
-        return _pitStatsPage;
+        return _matchStatsPage;
         break;
       case 2:
+        return _pitStatsPage;
+        break;
+      case 3:
         return _profilePage;
         break;
     }
@@ -78,26 +83,34 @@ class _HomeState extends State<Home> {
           
           items: <BottomNavigationDotBarItem>[
             BottomNavigationDotBarItem(
-                icon: Icons.insert_chart,
+                icon: Icons.event,
                 onTap: () {
                   setState(() {
                     _showPage = _pageChooser(0);
                   });
                 }),
             BottomNavigationDotBarItem(
-                icon: Icons.clear_all,
+                icon: Icons.insert_chart,
                 onTap: () {
                   setState(() {
                     _showPage = _pageChooser(1);
                   });
                 }),
             BottomNavigationDotBarItem(
+                icon: Icons.clear_all,
+                onTap: () {
+                  setState(() {
+                    _showPage = _pageChooser(2);
+                  });
+                }),
+                
+            BottomNavigationDotBarItem(
               
                 icon: Icons.account_circle,
                 
                 onTap: () {
                   setState(() {
-                    _showPage = _pageChooser(2);
+                    _showPage = _pageChooser(3);
                   });
                 }),
           ],

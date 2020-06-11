@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'RegisterSuccess.dart';
 import 'package:page_transition/page_transition.dart';
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   @override
@@ -25,13 +26,50 @@ class _RegisterState extends State<Register> {
   String password;
   String email;
   bool is_admin;
+  Color _color = Colors.black;
+  Color _iconColor= Color(0xFFF1F3F6);
+
+  Icon _icon = Icon(Icons.check);
 
   final usernameController = TextEditingController();
   final teamNumberController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  
+     getEmailUsability() async {
+    var user = usernameController.text;
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.86.37:8000/api/user/" + user),
+        headers: {
+          "Accept": "application/json",
+        });
+  }
 
+  getEmailValidity(){
+     Pattern pattern =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  RegExp regex = new RegExp(pattern);
+  return (!regex.hasMatch(emailController.text)) ? false : true;
+  }
+
+  changeEmailColor(){
+    if(getEmailValidity() == false){
+      setState(() {
+        _color = Colors.red;
+        _icon = Icon(Icons.cancel);
+        _iconColor = Colors.red;
+      });
+    }
+    else{
+      setState(() {
+        _color = Colors.green;
+        _icon = Icon(Icons.check);
+        _iconColor = Colors.green;
+      });
+    }
+  }
+  
 
   _changePadding() {
     setState(() {
@@ -39,7 +77,7 @@ class _RegisterState extends State<Register> {
     });
   }
 
-    _changePadding2() {
+  _changePadding2() {
     setState(() {
       _topPadding = 0;
     });
@@ -99,6 +137,18 @@ class _RegisterState extends State<Register> {
     });
   }
 
+  changeContainerOpacityFinal() {
+    setState(() {
+      _opacity = 0;
+    });
+  }
+
+    greenBorder() {
+    setState(() {
+      _color = Colors.green;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +156,7 @@ class _RegisterState extends State<Register> {
     _alignment = Alignment.center;
     _leftPadding = 25;
     _textOpacity = 0;
+    _color = Colors.black;
     Timer(const Duration(milliseconds: 1000), () {
       _changeSize();
       _changeInnerPadding();
@@ -124,6 +175,10 @@ class _RegisterState extends State<Register> {
         });
       });
     });
+    Timer.periodic(Duration(seconds: 1), (Timer t) { getEmailValidity(); changeEmailColor();
+    });
+
+
   }
 
   bool isChecked = false;
@@ -163,6 +218,41 @@ class _RegisterState extends State<Register> {
         backgroundColor: Color(0xFFF1F3F6),
         body: Stack(
           children: <Widget>[
+            Positioned(
+              top: 30,
+              child: AnimatedOpacity(
+                opacity: _textOpacity,
+                duration: Duration(milliseconds: 200),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+                  child: GestureDetector(
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color(0x29000000),
+                              offset: Offset(0, 0),
+                              blurRadius: 40)
+                        ],
+                      ),
+                      child: Center(
+                        child: Center(
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              ),
+            ),
             AnimatedAlign(
               curve: Curves.easeInOutExpo,
               duration: Duration(milliseconds: 1000),
@@ -209,20 +299,16 @@ class _RegisterState extends State<Register> {
                         child: AnimatedOpacity(
                           opacity: _textOpacity,
                           duration: Duration(milliseconds: 300),
-
-                            
-                              
-                              child: Text(
-                                "Welcome To FRCS",
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontFamily: 'Poppins-Light',
-                                  color: Colors.black,
-                                ),
-                              ),
+                          child: Text(
+                            "Welcome To FRCS",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontFamily: 'Poppins-Light',
+                              color: Colors.black,
                             ),
                           ),
-                  
+                        ),
+                      ),
                       AnimatedPadding(
                           curve: Curves.easeInOutExpo,
                           duration: Duration(milliseconds: 600),
@@ -253,6 +339,10 @@ class _RegisterState extends State<Register> {
                               labelText: "Email",
                               labelStyle: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade400),
+                                   focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: _color),
+                              ),
+                              suffixIcon: _icon,
                             ),
                             controller: emailController,
                           ),
@@ -264,6 +354,7 @@ class _RegisterState extends State<Register> {
                               labelText: "Username",
                               labelStyle: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade400),
+                             
                             ),
                             controller: usernameController,
                           ),
@@ -319,17 +410,20 @@ class _RegisterState extends State<Register> {
                                 Timer(const Duration(milliseconds: 100), () {
                                   _changeAlign2();
                                   _changePadding2();
-                                   Timer(const Duration(milliseconds: 2000), () {
-                                  Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child:
-                                            RegisterComplete(text: usernameController.text)));
-
-                                   });
+                                  Timer(const Duration(milliseconds: 2000), () {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            type: PageTransitionType.fade,
+                                            child: RegisterComplete(
+                                                text:
+                                                    usernameController.text)));
+                                    Timer(const Duration(milliseconds: 1000),
+                                        () {
+                                      changeContainerOpacityFinal();
+                                    });
+                                  });
                                 });
-                                
 
                                 //sendRegistrationData();
                               },
